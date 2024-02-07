@@ -1,0 +1,20 @@
+<?php
+
+use Illuminate\Support\Facades\Route;
+use Joegabdelsater\CatapultBase\Controllers\JourneyController;
+use Joegabdelsater\CatapultBase\Controllers\ModelsController;
+use Joegabdelsater\CatapultBase\Controllers\RelationshipsController;
+
+Route::prefix('catapult')
+    ->as('catapult.')
+    ->middleware('web')
+    ->group(function () {
+        Route::get('/', [JourneyController::class, 'index'])->name('welcome');
+        Route::get('/models', [ModelsController::class, 'create'])->name('models.create');
+        Route::post('/models', [ModelsController::class, 'store'])->name('models.store');
+        Route::post('/models/{model}/delete', [ModelsController::class, 'destroy'])->name('models.destroy');
+
+
+        Route::get('/relationships', [RelationshipsController::class, 'create'])->name('relationships.create');
+
+    });
