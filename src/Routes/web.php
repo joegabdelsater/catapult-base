@@ -17,4 +17,6 @@ Route::prefix('catapult')
 
         Route::get('/relationships', [RelationshipsController::class, 'create'])->name('relationships.create');
 
+        Route::get('/journey', [JourneyController::class, 'index'])->name('journey.index');
+        Route::get('/create-file', [JourneyController::class, 'createFile'])->name('create-file');
     });
