@@ -5,6 +5,8 @@ namespace Joegabdelsater\CatapultBase\Controllers;
 use Illuminate\Routing\Controller as BaseController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Process;
+use Joegabdelsater\CatapultBase\Builders\Models\ModelBuilder;
+use Joegabdelsater\CatapultBase\Models\Model;
 
 class JourneyController extends BaseController
 {
@@ -42,7 +44,8 @@ class JourneyController extends BaseController
         $importsCode = implode("\n", $imports);
 
         $usesCode = implode("\n\t", $uses);
-
+        $extendsCode = 'Model';
+        $implements = 'SomeInterface';
 
         $modelContent = <<<PHP
             <?php
@@ -50,7 +53,7 @@ class JourneyController extends BaseController
 
             $importsCode
 
-            class $modelName extends Model
+            class $modelName $extendsCode ? ' extends $extendsCode' : '' implements $implements ? ' implements $implements' : ''
             {   
                 $usesCode
 
@@ -65,5 +68,14 @@ class JourneyController extends BaseController
 
         // Create the model file
         file_put_contents("$modelDir/$modelName.php", $modelContent);
+    }
+
+    public function generate() {
+        $models = Model::with('relationships')->get();
+
+        foreach ($models as $model) {
+            $modelBuilder = new ModelBuilder($model);
+            $modelBuilder->run();
+        }
     }
 }
