@@ -13,9 +13,14 @@ return new class extends Migration
     {
         Schema::create('relationships', function (Blueprint $table) {
             $table->id();
-            $table->string('type');
-            $table->foreignId('model_id');
-            $table->json('fields');
+            $table->foreignId('model_id')->onDelete('cascade');
+            $table->string('relationship_method_name');
+            $table->string('foreign_key')->nullable();
+            $table->string('local_key')->nullable();
+            $table->string('owner_key')->nullable();
+            $table->string('model');
+            $table->string('relationship_model');
+            $table->string('relationship_method');
             $table->timestamps();
         });
     }

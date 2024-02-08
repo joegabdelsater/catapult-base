@@ -14,9 +14,12 @@ Route::prefix('catapult')
         Route::post('/models', [ModelsController::class, 'store'])->name('models.store');
         Route::post('/models/{model}/delete', [ModelsController::class, 'destroy'])->name('models.destroy');
 
+        Route::get('/relationships', [RelationshipsController::class, 'index'])->name('relationships.index');
+        Route::get('/models/{modelId}/relationships', [RelationshipsController::class, 'create'])->name('relationships.create');
+        Route::post('/relationships/{model}', [RelationshipsController::class, 'store'])->name('relationships.store');
 
-        Route::get('/relationships', [RelationshipsController::class, 'create'])->name('relationships.create');
 
+        /** TEST METHODS */
         Route::get('/journey', [JourneyController::class, 'index'])->name('journey.index');
         Route::get('/create-file', [JourneyController::class, 'createFile'])->name('create-file');
     });
