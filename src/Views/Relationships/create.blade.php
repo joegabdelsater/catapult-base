@@ -1,8 +1,7 @@
 @extends('catapult::layout.base')
 
-
 @section('content')
-    <div class="grid grid-cols-[800px_300px] gap-16 h-screen p-8 ">
+    <div class="grid grid-cols-[1000px_200px] gap-16 h-screen p-8 ">
         <div>
             <h1 class="text-2xl font-bold mb-4">Let's setup your relationships</h1>
 
@@ -11,25 +10,28 @@
                     <div class="mb-4  flex flex-row justify-between items-center">
                         <p class="text-gray-700 font-bold">{{ $model->name }}.php</p>
 
-                        <div class="cursor-pointer js-arrow-up {{$mKey > 0 ? 'hidden' : '' }}" data-arrow="arrow-up-{{ $model->name }}">
+                        <div class="cursor-pointer js-arrow-up {{ $mKey > 0 ? 'hidden' : '' }}"
+                            data-arrow="arrow-up-{{ $model->name }}">
                             @component('catapult::components.icons.chevron-up')
                             @endcomponent
                         </div>
 
-                        <div class="cursor-pointer js-arrow-down   {{$mKey > 0 ? '' : 'hidden' }}" data-arrow="arrow-up-{{ $model->name }}">
+                        <div class="cursor-pointer js-arrow-down   {{ $mKey > 0 ? '' : 'hidden' }}"
+                            data-arrow="arrow-up-{{ $model->name }}">
                             @component('catapult::components.icons.chevron-down')
                             @endcomponent
                         </div>
 
                     </div>
 
-                    <div class="w-full  grid grid-cols-2 gap-6 js-{{ $model->name }}-container {{ $mKey > 0 ? 'hidden' : ''}}">
+                    <div class="w-full  js-{{ $model->name }}-container {{ $mKey > 0 ? 'hidden' : '' }}">
                         @foreach ($relationships as $rKey => $relationship)
-                            <div class="bg-sky-100 p-4 rounded-md w-full h-80 mb-4 relative overflow-hidden"
-                                ondrop="drop(event, '{{ $rKey }}', '{{ $model->name }}')"
+                            <div class="text-gray text-sm font-bold underline mb-2">{{ $relationship }}</div>
+
+                            <div class="bg-gray-700 p-4 rounded-md w-full h-80 mb-4 relative overflow-hidden"
+                                ondrop="drop(event, '{{ $rKey }}', '{{ $model->name }}', '{{$relationship}}')"
                                 ondragover="allowDrop(event)" data-relationship="{{ $rKey }}"
                                 data-model="{{ $mKey }}">
-                                <div class="text-gray text-sm font-bold underline">{{ $relationship }}</div>
 
                                 <div
                                     class="h-full w-full js-{{ $model->name }}-{{ $rKey }} overflow-y-scroll py-4 px-2">
@@ -63,66 +65,13 @@
 @endsection
 
 @push('scripts')
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            // Select all the arrow-up elements
-            const arrowUps = document.querySelectorAll('.js-arrow-up');
-            arrowUps.forEach(arrowUp => {
-                arrowUp.addEventListener('click', function() {
-                    const modelName = this.getAttribute('data-arrow').replace('arrow-up-', '');
-                    // Hide the arrow up
-                    this.style.display = 'none';
-                    // Show the arrow down
-                    document.querySelector(`.js-arrow-down[data-arrow="arrow-up-${modelName}"]`)
-                        .style.display = 'grid';
-                    // Hide the container
-                    document.querySelector(`.js-${modelName}-container`).style.display = 'none';
-                });
-            });
+<script>
+    var relationshipMethodInputs = @php echo json_encode($relationshipMethods) @endphp;
+    var deleteComponent = `@component('catapult::components.icons.delete') @endcomponent`;
+</script>
 
-            // Select all the arrow-down elements
-            const arrowDowns = document.querySelectorAll('.js-arrow-down');
-            arrowDowns.forEach(arrowDown => {
-                arrowDown.addEventListener('click', function() {
-                    const modelName = this.getAttribute('data-arrow').replace('arrow-up-',
-                    ''); // Note: your data-arrow attributes for down are currently the same as for up, which might be a mistake.
-                    // Show the arrow up
-                    document.querySelector(`.js-arrow-up[data-arrow="arrow-up-${modelName}"]`).style
-                        .display = 'grid';
-                    // Hide the arrow down
-                    this.style.display = 'none';
-                    // Show the container
-                    document.querySelector(`.js-${modelName}-container`).style.display = 'grid';
-                });
-            });
-        });
+<script src="{{ asset('joegabdelsater/catapult-base/js/relationships/main.js') }}"></script>
 
-        function allowDrop(event) {
-            event.preventDefault();
-        }
+<script src="{{ asset('joegabdelsater/catapult-base/js/relationships/dnd.js') }}"></script>
 
-        function drag(event, modelName) {
-            event.dataTransfer.setData("origin", modelName);
-        }
-
-        function drop(event, relationship, model) {
-            event.preventDefault();
-
-            var origin = event.dataTransfer.getData("origin");
-            var element = document.querySelector(`.js-${model}-${relationship}`);
-
-            const newClass = document.createElement('div');
-            newClass.innerHTML =
-                `${origin} @component('catapult::components.icons.delete') @endcomponent`;
-            newClass.className =
-                'bg-white p-2 rounded-md mb-2 font-medium text-sm flex flex-row justify-between items-center cursor-pointer';
-
-            newClass.setAttribute('data-origin', origin);
-            newClass.addEventListener('click', function() {
-                this.remove();
-            });
-
-            element.appendChild(newClass);
-        }
-    </script>
 @endpush

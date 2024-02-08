@@ -7,6 +7,7 @@ use Illuminate\Support\ServiceProvider;
 class CatapultBaseServiceProvider extends ServiceProvider
 {
 
+    /** @todo add instructions to publish js */
     public function boot()
     {
 
@@ -17,5 +18,9 @@ class CatapultBaseServiceProvider extends ServiceProvider
             __DIR__ . '/../config/relationships.php',
             'relationships'
         );
+
+        $this->publishes([
+            __DIR__ . '/../assets/js/' => public_path('joegabdelsater/catapult-base/js/'),
+        ], 'catapult-base');
     }
 }

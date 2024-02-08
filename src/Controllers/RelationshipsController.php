@@ -12,8 +12,8 @@ class RelationshipsController extends BaseController
     {
         $models = Model::with('relationships')->get();
         $relationships = config('relationships.supported');
-
-        return view('catapult::relationships.create', compact('models', 'relationships'));
+        $relationshipMethods = config('relationships.function_parameters');
+        return view('catapult::relationships.create', compact('models', 'relationships', 'relationshipMethods'));
     }
 
     public function store(Request $request)
