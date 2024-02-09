@@ -45,10 +45,9 @@
 
  
 
-        <button data-delete-relationship-id="{{ $current->id }}"
-            onclick="deleteRelationship('{{ $current->id }}')"
+        <button onclick="deleteRelationship('{{ $current->id }}')"
             type="button"
-            class="bg-red-600 rounded-r-md flex items-center justify-center h-full w-full js-delete-relationship">
+            class="bg-red-600 rounded-r-md flex items-center justify-center h-full w-full">
             <div class="delete-btn">
                 @component('catapult::components.icons.delete')
                 @endcomponent
