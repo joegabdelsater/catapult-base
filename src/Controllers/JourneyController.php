@@ -80,5 +80,12 @@ class JourneyController extends BaseController
             $modelBuilder = new ModelBuilder($model);
             ClassGenerator::generate(fileName: $model->name . '.php', content: $modelBuilder->build(), contentType: 'models');
         }
+
+        return redirect()->route('catapult.generate.success');
+    }
+
+    public function successfullyGenerated()
+    {
+        return view('catapult::generate.success');
     }
 }

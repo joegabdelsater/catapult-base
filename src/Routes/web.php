@@ -23,6 +23,9 @@ Route::prefix('catapult')
         /** TEST METHODS */
         Route::get('/journey', [JourneyController::class, 'index'])->name('journey.index');
         Route::get('/create-file', [JourneyController::class, 'createFile'])->name('create-file');
+
         Route::get('/generate', [JourneyController::class, 'generate'])->name('generate');
+        Route::get('/generate/success', [JourneyController::class, 'successfullyGenerated'])->name('generate.success');
+
     });
 
