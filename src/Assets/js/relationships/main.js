@@ -1,8 +1,8 @@
-document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener('DOMContentLoaded', function () {
     // Select all the arrow-up elements
     const arrowUps = document.querySelectorAll('.js-arrow-up');
     arrowUps.forEach(arrowUp => {
-        arrowUp.addEventListener('click', function() {
+        arrowUp.addEventListener('click', function () {
             const modelName = this.getAttribute('data-arrow').replace('arrow-up-', '');
             // Hide the arrow up
             this.style.display = 'none';
@@ -17,8 +17,8 @@ document.addEventListener('DOMContentLoaded', function() {
     // Select all the arrow-down elements
     const arrowDowns = document.querySelectorAll('.js-arrow-down');
     arrowDowns.forEach(arrowDown => {
-        arrowDown.addEventListener('click', function() {
-            const modelName = this.getAttribute('data-arrow').replace('arrow-up-','' ); // Note: your data-arrow attributes for down are currently the same as for up, which might be a mistake.
+        arrowDown.addEventListener('click', function () {
+            const modelName = this.getAttribute('data-arrow').replace('arrow-up-', ''); // Note: your data-arrow attributes for down are currently the same as for up, which might be a mistake.
             // Show the arrow up
             document.querySelector(`.js-arrow-up[data-arrow="arrow-up-${modelName}"]`).style
                 .display = 'grid';
@@ -29,3 +29,23 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     });
 });
+
+function deleteRelationship(relationshipId) {
+
+    if (confirm('Are you sure you want to delete this relationship from database?')) {
+        fetch(`/catapult/relationships/${relationshipId}/destroy`, {
+            method: 'POST',
+                headers: {
+                    'X-Requested-With': 'XMLHttpRequest',
+                    'X-CSRF-TOKEN': csrfToken
+            },
+        })
+            .then(response => {
+                if (response.ok) {
+                    location.reload();
+                } else {
+                    alert('Failed to delete the relationship');
+                }
+            });
+    }
+}
