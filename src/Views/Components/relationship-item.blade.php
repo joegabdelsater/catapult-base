@@ -35,6 +35,9 @@
             <input type="hidden"
                 name="r[{{ $current->form_input_key }}][relationship]"
                 value="{{ $current->relationship }}" />
+                <input type="hidden"
+                name="r[{{ $current->form_input_key }}][id]"
+                value="{{ $current->id }}" />
             <input type="hidden"
                 name="r[{{ $current->form_input_key }}][relationship_method]"
                 value="{{ $current->relationship_method }}" />

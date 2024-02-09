@@ -48,11 +48,16 @@ class RelationshipsController extends BaseController
             'r.*.model' => 'required',
             'r.*.relationship_model' => 'required',
             'r.*.relationship_method' => 'required',
+            'r.*.id' => 'sometimes',
         ]);
 
 
-
         foreach ($request->r as $relationship) {
+            if (isset($relationship['id'])) {
+                $model->relationships()->find($relationship['id'])->update($relationship);
+                continue;
+            }
+            
             $model->relationships()->create($relationship);
         }
 
