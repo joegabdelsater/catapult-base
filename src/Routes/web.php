@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use Joegabdelsater\CatapultBase\Controllers\JourneyController;
+use Joegabdelsater\CatapultBase\Controllers\MigrationsController;
 use Joegabdelsater\CatapultBase\Controllers\ModelsController;
 use Joegabdelsater\CatapultBase\Controllers\RelationshipsController;
 
@@ -19,6 +20,10 @@ Route::prefix('catapult')
         Route::post('/relationships/{model}', [RelationshipsController::class, 'store'])->name('relationships.store');
         Route::post('/relationships/{relationship}/destroy', [RelationshipsController::class, 'destroy'])->name('relationships.destroy');
 
+        Route::get('/migrations', [MigrationsController::class, 'index'])->name('migrations.index');
+        Route::get('/models/{modelId}/migrations', [MigrationsController::class, 'create'])->name('migrations.create');
+
+        
 
         /** TEST METHODS */
         Route::get('/journey', [JourneyController::class, 'index'])->name('journey.index');

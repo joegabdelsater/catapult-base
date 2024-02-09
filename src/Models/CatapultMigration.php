@@ -5,18 +5,13 @@ namespace Joegabdelsater\CatapultBase\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model as BaseModel;
 
-class Model extends BaseModel
+class CatapultMigration extends BaseModel
 {
     use HasFactory;
     protected $guarded = ['id'];
-
-    public function relationships()
+    protected $table = 'catapult_migrations';
+    public function model()
     {
-        return $this->hasMany(Relationship::class);
-    }
-
-    public function migrations()
-    {
-        return $this->hasMany(CatapultMigration::class);
+        return $this->belongsTo(Model::class);
     }
 }

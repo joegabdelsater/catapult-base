@@ -10,7 +10,8 @@ class MigrationsController extends BaseController
 {
 
     public function index() {
-
+        $models = Model::with('migrations')->get();
+        return view('catapult::migrations.index', compact('models'));
     }
 
     public function create()
