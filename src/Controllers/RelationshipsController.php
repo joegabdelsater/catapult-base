@@ -13,7 +13,7 @@ class RelationshipsController extends BaseController
 
     public function index()
     {
-        $models = Model::all();
+        $models = Model::with('relationships')->get();
         return view('catapult::relationships.index', compact('models'));
     }
     public function create($modelId)
@@ -57,7 +57,7 @@ class RelationshipsController extends BaseController
                 $model->relationships()->find($relationship['id'])->update($relationship);
                 continue;
             }
-            
+
             $model->relationships()->create($relationship);
         }
 
