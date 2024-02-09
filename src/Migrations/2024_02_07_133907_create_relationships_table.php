@@ -15,12 +15,14 @@ return new class extends Migration
             $table->id();
             $table->foreignId('model_id')->onDelete('cascade');
             $table->string('relationship_method_name');
+            $table->string('relationship_model');
+            $table->string('relationship_method');
+            $table->string('relationship');
             $table->string('foreign_key')->nullable();
             $table->string('local_key')->nullable();
             $table->string('owner_key')->nullable();
             $table->string('model');
-            $table->string('relationship_model');
-            $table->string('relationship_method');
+
             $table->timestamps();
         });
     }

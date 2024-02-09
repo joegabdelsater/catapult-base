@@ -2,40 +2,52 @@
 
 namespace Joegabdelsater\CatapultBase\Controllers;
 
+
 use Illuminate\Routing\Controller as BaseController;
 use Illuminate\Http\Request;
 use Joegabdelsater\CatapultBase\Models\Model;
+use Joegabdelsater\CatapultBase\Models\Relationship;
 
 class RelationshipsController extends BaseController
 {
 
-    public function index() {
+    public function index()
+    {
         $models = Model::all();
         return view('catapult::relationships.index', compact('models'));
-
     }
     public function create($modelId)
     {
-
-        $model = Model::with('relationships')->find($modelId);
+        $model = Model::find($modelId);
         $models = Model::all();
-        $relationships = config('relationships.supported');
-        $relationshipMethods = config('relationships.function_parameters');
 
-        return view('catapult::relationships.create', compact('model', 'models', 'relationships', 'relationshipMethods'));
+        $supportedRelationships = config('relationships.supported');
+        $relationshipMethodParameters = config('relationships.function_parameters');
+
+        $exitsting = [];
+
+        foreach($supportedRelationships as $key => $relationship){
+            $existing[$key] = Relationship::where([
+                'relationship' => $key,
+                'model_id' => $modelId
+            ])->get();
+        }
+
+        return view('catapult::relationships.create', compact('model', 'models', 'supportedRelationships', 'relationshipMethodParameters', 'existing'));
     }
 
     public function store(Request $request, Model $model)
     {
         $request->validate([
-           'r.*' => 'array',
-              'r.*.relationship_method_name' => 'required',
-              'r.*.foreign_key' => 'sometimes',
-              'r.*.local_key' => 'sometimes',
-              'r.*.owner_key' => 'sometimes',
-              'r.*.model' => 'required',
-              'r.*.relationship_model' => 'required',
-              'r.*.relationship_method' => 'required',
+            'r.*' => 'array',
+            'r.*.relationship' => 'required',
+            'r.*.relationship_method_name' => 'required',
+            'r.*.foreign_key' => 'sometimes',
+            'r.*.local_key' => 'sometimes',
+            'r.*.owner_key' => 'sometimes',
+            'r.*.model' => 'required',
+            'r.*.relationship_model' => 'required',
+            'r.*.relationship_method' => 'required',
         ]);
 
 
@@ -47,9 +59,9 @@ class RelationshipsController extends BaseController
         return redirect()->back();
     }
 
-    public function destroy()
+    public function destroy($relationshipId)
     {
-
-        return redirect()->back();
+        Relationship::destroy($relationshipId);
+        return response()->json(['message' => 'Relationship deleted']);
     }
 }

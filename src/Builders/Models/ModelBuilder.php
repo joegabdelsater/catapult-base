@@ -2,13 +2,9 @@
 
 namespace Joegabdelsater\CatapultBase\Builders\Models;
 
-use Illuminate\Database\Eloquent\Model;
-use Joegabdelsater\CatapultBase\Builders\Models\RelationshipFactory;
-use Joegabdelsater\CatapultBase\Builders\Models\HasOne;
-use Joegabdelsater\CatapultBase\Builders\Models\HasMany;
+use Joegabdelsater\CatapultBase\Interfaces\Builder;
 
-
-class ModelBuilder
+class ModelBuilder implements Builder
 {
     public $model;
     public $relationshipFactory;
@@ -18,28 +14,19 @@ class ModelBuilder
         $this->model = $model;
     }
 
-    public function run()
-    {
-        $this->buildRelationshipMethodsArray();
-        $this->build();
-    }
-
-    public function buildRelationshipMethodsArray()
+ 
+    public function getRelationships(): string
     {
         foreach ($this->model->relationships as $relationship) {
-            $relationshipClass = 'Joegabdelsater\\CatapultBase\\Builders\\Models\\' . ucfirst($relationship->relationship_method);
-
-            $this->relationshipFactory = new RelationshipFactory(new $relationshipClass($relationship));
+            $this->relationshipFactory = new RelationshipBuilder($relationship);
             $this->relationships[] = $this->relationshipFactory->build();
         }
-    }
 
-    public function getFinalRelationshipCode()
-    {
         return implode('', $this->relationships);
     }
 
-    public function build()
+
+    public function build(): string
     {
         $modelName = $this->model->name;
         $imports = [
@@ -64,21 +51,17 @@ class ModelBuilder
 
             $importsCode
 
-            class $modelName extends Model
+            class {$this->model->name} extends Model
             {   
                 $usesCode
 
                 protected \$fillable = ['name', 'description', 'price'];
-                // Add more properties and methods here as needed
                 
-                {$this->getFinalRelationshipCode()}
+                {$this->getRelationships()}
             }
 
             PHP;
 
-        $modelDir = __DIR__ . '/../../../../../../app/Models';
-
-        // Create the model file
-        file_put_contents("$modelDir/$modelName.php", $modelContent);
+        return $modelContent;
     }
 }

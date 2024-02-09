@@ -5,8 +5,10 @@ namespace Joegabdelsater\CatapultBase\Controllers;
 use Illuminate\Routing\Controller as BaseController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Process;
+use Joegabdelsater\CatapultBase\Builders\ClassGenerator;
 use Joegabdelsater\CatapultBase\Builders\Models\ModelBuilder;
 use Joegabdelsater\CatapultBase\Models\Model;
+
 
 class JourneyController extends BaseController
 {
@@ -70,12 +72,13 @@ class JourneyController extends BaseController
         file_put_contents("$modelDir/$modelName.php", $modelContent);
     }
 
-    public function generate() {
+    public function generate()
+    {
         $models = Model::with('relationships')->get();
 
         foreach ($models as $model) {
             $modelBuilder = new ModelBuilder($model);
-            $modelBuilder->run();
+            ClassGenerator::generate(fileName: $model->name . '.php', content: $modelBuilder->build(), contentType: 'models');
         }
     }
 }

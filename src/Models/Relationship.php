@@ -10,9 +10,15 @@ class Relationship extends BaseModel
     use HasFactory;
     protected $guarded = ['id'];
     protected $table = 'relationships';
-    
+    protected $apprends = ['form_input_key'];
     public function model()
     {
         return $this->belongsTo(Model::class);
+    }
+
+    public function getFormInputKeyAttribute()
+    {
+
+        return $this->model . '-' . $this->relationship_method . '-' . $this->relationship_model;
     }
 }
