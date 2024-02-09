@@ -14,6 +14,10 @@ class JourneyController extends BaseController
 {
     public function index()
     {
+        return view('catapult::welcome');
+    }
+    public function installDependencies()
+    {
         /** Check Process documentation in laravel
          * https://laravel.com/docs/10.x/processes
          * Used to automate packages installation and automating package installation commands
