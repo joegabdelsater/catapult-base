@@ -34,6 +34,12 @@
                         Guard id (protected $guarded = ['id'])</label>
                 </div>
 
+                <div class="flex items-center mb-4">
+                    <input type="checkbox" id="has_validation_request" name="has_validation_request"
+                        class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:border-gray-600" checked>
+                    <label for="has_validation_request" class="ms-2 text-sm font-medium text-gray-400 dark:text-gray-500">Create validation request</label>
+                </div>
+
                 <div class="flex flex-row justify-end">
                     <button type="submit"
                         class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center self-end">Save</button>
@@ -56,6 +62,10 @@
                         @endif
                         @if ($model->only_guard_id)
                             <div class="text-gray-400">Only Guard id</div>
+                        @endif
+
+                        @if ($model->has_validation_request)
+                            <div class="text-gray-400">Has validation request</div>
                         @endif
 
                         <form method="POST" action="{{ route('catapult.models.destroy', ['model' => $model->id]) }}">

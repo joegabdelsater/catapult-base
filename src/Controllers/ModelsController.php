@@ -20,12 +20,14 @@ class ModelsController extends BaseController
             'name' => 'required|unique:models',
             'only_guard_id' => 'nullable',
             'has_translations' => 'nullable',
+            'has_validation_request' => 'nullable',
         ]);
 
         Model::create([
             'name' => trim(ucfirst($valid['name'])),
             'only_guard_id' => $request->has('only_guard_id'),
             'has_translations' => $request->has('has_translations'),
+            'has_validation_request' => $request->has('has_validation_request'),
         ]);
 
         return redirect()->back();
