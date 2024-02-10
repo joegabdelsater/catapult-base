@@ -14,14 +14,14 @@ class MigrationsController extends BaseController
         return view('catapult::migrations.index', compact('models'));
     }
 
-    public function create()
+public function create(Model $model)
     {
-        $models = Model::all();
-        return view('catapult::models.create', compact('models'));
+        return view('catapult::migrations.create', compact('model'));
     }
 
-    public function store(Request $request)
+    public function store(Request $request, Model $model)
     {
+       
         $valid = $request->validate([
             'name' => 'required|unique:models',
             'only_guard_id' => 'nullable',
