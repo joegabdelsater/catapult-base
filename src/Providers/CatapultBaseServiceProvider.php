@@ -16,6 +16,8 @@ class CatapultBaseServiceProvider extends ServiceProvider
         $this->loadMigrationsFrom([__DIR__ . '/../migrations']);
         $this->mergeConfigFrom(__DIR__ . '/../config/relationships.php','relationships');
         $this->mergeConfigFrom(__DIR__ . '/../config/directories.php','directories');
+        $this->mergeConfigFrom(__DIR__ . '/../config/migrations.php','migrations');
+
 
 
         $this->publishes([

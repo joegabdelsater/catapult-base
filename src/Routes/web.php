@@ -6,6 +6,10 @@ use Joegabdelsater\CatapultBase\Controllers\MigrationsController;
 use Joegabdelsater\CatapultBase\Controllers\ModelsController;
 use Joegabdelsater\CatapultBase\Controllers\RelationshipsController;
 
+$anonymous = require __DIR__ . '/../Temp/create_auditions_table.php'; 
+
+dd($anonymous->up());
+
 Route::prefix('catapult')
     ->as('catapult.')
     ->middleware('web')
@@ -23,6 +27,10 @@ Route::prefix('catapult')
         Route::get('/migrations', [MigrationsController::class, 'index'])->name('migrations.index');
         Route::get('/models/{model}/migrations', [MigrationsController::class, 'create'])->name('migrations.create');
         Route::post('/models/{model}/migrations', [MigrationsController::class, 'store'])->name('migrations.store');
+        Route::delete('/models/{migration}/migrations', [MigrationsController::class, 'destroy'])->name('migrations.destroy');
+        
+        Route::post('migration/{model}/generate', [MigrationsController::class, 'generate'])->name('migrations.generate');
+
 
 
         
@@ -34,5 +42,8 @@ Route::prefix('catapult')
         Route::get('/generate', [JourneyController::class, 'generate'])->name('generate');
         Route::get('/generate/success', [JourneyController::class, 'successfullyGenerated'])->name('generate.success');
 
+        Route::get('/test', function() {
+
+        }); 
     });
 

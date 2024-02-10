@@ -15,8 +15,8 @@ class Model extends BaseModel
         return $this->hasMany(Relationship::class);
     }
 
-    public function migrations()
+    public function migration()
     {
-        return $this->hasMany(CatapultMigration::class);
+        return $this->hasOne(CatapultMigration::class);
     }
 }

@@ -14,16 +14,9 @@ return new class extends Migration
         Schema::create('catapult_migrations', function (Blueprint $table) {
             $table->id();
             $table->foreignId('model_id')->onDelete('cascade');
-            $table->string('column');
-            $table->string('type');
-            $table->boolean('nullable')->default(false);
-            $table->boolean('unique')->default(false);
-            $table->string('default')->nullable();
-            $table->string('on_delete')->nullable();
-            $table->string('related_table')->nullable();
-            $table->string('related_column')->nullable();
-            $table->string('enum_options')->nullable();
+            $table->text('migration_code')->nullable();
             $table->string('validation')->nullable();
+            $table->boolean('created')->default(false);
             $table->timestamps();
         });
     }
