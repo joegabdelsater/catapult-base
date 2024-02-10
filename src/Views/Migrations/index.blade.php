@@ -5,8 +5,12 @@
 
         <h1 class="text-2xl font-bold mb-8">Let's build migrations &#10084;</h1>
 
+        @if (count($models) === 0)
+        <div class="text-gray-700 text-lg">Seems like you haven't created any models yet. &#128549;</div>
+    @endif
+
         @foreach ($models as $model)
-            <a href="{{ route('catapult.migrations.create', ['modelId' => $model->id]) }}"
+            <a href="{{ route('catapult.migrations.create', ['model' => $model->id]) }}"
                 class="text-gray-700 block font-bold model group hover:text-white mb-16 border-2 border-dashed hover:border-solid p-4 rounded-md mb-4 hover:bg-gray-700 flex flex-row justify-between items-center"><span>{{ $model->name }}.php</span>
                 <div class="flex flex-row items-center">
                     @if ($model->migrations->count() > 0)
