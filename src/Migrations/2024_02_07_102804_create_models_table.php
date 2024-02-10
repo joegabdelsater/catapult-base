@@ -14,6 +14,7 @@ return new class extends Migration
         Schema::create('models', function (Blueprint $table) {
             $table->id();
             $table->string('name')->unique();
+            $table->string('table_name');
             $table->boolean('has_translations')->default(false);
             $table->boolean('only_guard_id')->default(false);
             $table->boolean('has_validation_request')->default(false);
