@@ -6,10 +6,6 @@ use Joegabdelsater\CatapultBase\Controllers\MigrationsController;
 use Joegabdelsater\CatapultBase\Controllers\ModelsController;
 use Joegabdelsater\CatapultBase\Controllers\RelationshipsController;
 
-$anonymous = require __DIR__ . '/../Temp/create_auditions_table.php'; 
-
-dd($anonymous->up());
-
 Route::prefix('catapult')
     ->as('catapult.')
     ->middleware('web')

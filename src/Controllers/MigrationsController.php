@@ -7,7 +7,9 @@ use Illuminate\Http\Request;
 use Joegabdelsater\CatapultBase\Models\Model;
 use Joegabdelsater\CatapultBase\Models\CatapultMigration;
 use Joegabdelsater\CatapultBase\Builders\Migrations\MigrationBuilder;
+use Joegabdelsater\CatapultBase\Builders\Migrations\ValidationBuilder;
 use Joegabdelsater\CatapultBase\Builders\ClassGenerator;
+
 class MigrationsController extends BaseController
 {
 
@@ -21,19 +23,19 @@ class MigrationsController extends BaseController
     {
         $base =
             "<?php
-       namespace Joegabdelsater\CatapultBase\Temp;
-       use Illuminate\Database\Migrations\Migration;
-       use Illuminate\Database\Schema\Blueprint;
-       use Illuminate\Support\Facades\Schema;
+        use Illuminate\Database\Migrations\Migration;
+        use Illuminate\Database\Schema\Blueprint;
+        use Illuminate\Support\Facades\Schema; 
+        use Joegabdelsater\CatapultBase\Classes\CatapultSchema;
 
     return new class extends Migration
         {
             /**
              * Run the migrations.
              */
-            public function up(): void
+            public function up()
             {
-                Schema::create('{$model->table_name}', function (Blueprint \$table) {
+              return CatapultSchema::create('{$model->table_name}', function (Blueprint \$table) {
                     \$table->id();
                     
                     \$table->timestamps();
@@ -72,9 +74,9 @@ class MigrationsController extends BaseController
             'validation' => 'nullable',
         ]);
 
-        if($model->migration){
+        if ($model->migration) {
             $model->migration()->update($valid);
-        }else{
+        } else {
             $model->migration()->create($valid);
         }
 
@@ -87,10 +89,31 @@ class MigrationsController extends BaseController
         return redirect()->back();
     }
 
-    public function generate(Model $model) {
+    public function generate(Model $model)
+    {
         $model = Model::with('migration')->find($model->id);
+
+        /** Create the temp migration */
         $migrationBuilder = new MigrationBuilder($model->migration);
-        ClassGenerator::generate(fileName: 'create_' . $model->table_name . '_table.php', content: $migrationBuilder->build(), contentType: 'temp_migrations');
+        $migrationGenerator = new ClassGenerator(filePath: config('directories.temp_migrations'), fileName: 'create_' . $model->table_name . '_table.php', content: $migrationBuilder->build());
+        $migrationGenerator->generate();
+
+        /** Extract the validaiton rules from the temp migration and create the validation request */
+        $validationBuilder = new ValidationBuilder(include($migrationGenerator->getFullPath()), $model->name);
+        $validationContent = $validationBuilder->build();
+        $requestGenerator = new ClassGenerator(filePath: config('directories.validation_requests'), fileName: $model->name . 'Request.php', content: $validationContent);
+        $requestGenerator->generate();
+
+        /** Modify the content of the temp migration */
+        $migrationGenerator->modifyContent(stringModifications: [
+            'use Joegabdelsater\CatapultBase\Classes\CatapultSchema;' => '',
+            'return CatapultSchema' => 'Schema'
+        ], regexModifications: [
+            "/->validation\(['\"](.*?)['\"]\)/" => ''
+        ])
+            ->renameFile(date('Y_m_d') . '_' . time() . '_create_' . $model->table_name . '_table.php')
+            ->moveFile(config('directories.migrations'));
+
 
         return redirect()->route('catapult.migrations.index');
     }

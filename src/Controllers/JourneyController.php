@@ -82,7 +82,8 @@ class JourneyController extends BaseController
 
         foreach ($models as $model) {
             $modelBuilder = new ModelBuilder($model);
-            ClassGenerator::generate(fileName: $model->name . '.php', content: $modelBuilder->build(), contentType: 'models');
+            $modelGenerator = new ClassGenerator(filePath: config('directories.models'), fileName: $model->name . '.php', content: $modelBuilder->build());
+            $modelGenerator->generate();
         }
 
         return redirect()->route('catapult.generate.success');
