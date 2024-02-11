@@ -74,6 +74,8 @@ class MigrationsController extends BaseController
             'validation' => 'nullable',
         ]);
 
+        $valid['created'] = false;
+
         if ($model->migration) {
             $model->migration()->update($valid);
         } else {
@@ -114,7 +116,7 @@ class MigrationsController extends BaseController
             ->renameFile(date('Y_m_d') . '_' . time() . '_create_' . $model->table_name . '_table.php')
             ->moveFile(config('directories.migrations'));
 
-
+        $model->migration->update(['created' => true]);
         return redirect()->route('catapult.migrations.index');
     }
 }

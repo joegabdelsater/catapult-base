@@ -20,7 +20,7 @@
 
 @push('scripts')
     <script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.32.6/ace.js" type="text/javascript" charset="utf-8"></script>
-
+{{-- <script src="https://www.unpkg.com/ace-builds@latest/src-noconflict/ace.js"></script> --}}
     <script>
         var editor = ace.edit("editor");
         editor.setTheme("ace/theme/monokai");
