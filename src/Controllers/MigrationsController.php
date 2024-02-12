@@ -9,18 +9,58 @@ use Joegabdelsater\CatapultBase\Models\CatapultMigration;
 use Joegabdelsater\CatapultBase\Builders\Migrations\MigrationBuilder;
 use Joegabdelsater\CatapultBase\Builders\Migrations\ValidationBuilder;
 use Joegabdelsater\CatapultBase\Builders\ClassGenerator;
+use Illuminate\Support\Str;
 
 class MigrationsController extends BaseController
 {
 
     public function index()
     {
-        $models = Model::with('migration')->get();
+        $models = Model::with('migration', 'relationships')->get();
+
+        $models = $models->map(function ($model) {
+            $warning = null;
+
+            $belongsTo = $model->relationships->filter(function ($relationship) {
+                return $relationship->relationship_method === 'belongsTo';
+            });
+
+            if (count($belongsTo)) {
+                $warnings = $belongsTo->pluck('relationship_model');
+                $warning = 'Make sure to create the ' . implode(' & ', $warnings->toArray()) . ' migration(s) first!';
+            }
+
+            $model->warning_message = $warning;
+            return $model;
+        });
         return view('catapult::migrations.index', compact('models'));
     }
 
     public function create(Model $model)
     {
+        $model = Model::with(['migration', 'relationships'])->find($model->id);
+
+        //Suggest the migration foreign code based on the relationship
+        // if we're in create mode
+        $foreignKeys = [];
+        $foreignKeysCode = '';
+
+
+        foreach ($model->relationships as $relationship) {
+            $foreignModelName = $relationship->foreign_key;
+
+            if ($relationship->relationship_method  === 'belongsTo') {
+                if (!$foreignModelName) {
+                    $foreignModelName = str_replace('::class', '', $relationship->relationship_model);
+                    $foreignModelName = lcfirst(Str::singular($foreignModelName)) . '_id';
+                }
+
+                $foreignKeys[] = "\$table->foreignId('$foreignModelName')->onDelete('cascade');";
+            }
+        }
+
+        $foreignKeysCode = implode("\n\t\t\t\t\t", $foreignKeys);
+
         $base =
             "<?php
         use Illuminate\Database\Migrations\Migration;
@@ -37,7 +77,7 @@ class MigrationsController extends BaseController
             {
               return CatapultSchema::create('{$model->table_name}', function (Blueprint \$table) {
                     \$table->id();
-                    
+                    $foreignKeysCode
                     \$table->timestamps();
                 });
             }
@@ -55,7 +95,6 @@ class MigrationsController extends BaseController
 
         ";
 
-        $model = Model::with(['migration', 'relationships'])->find($model->id);
 
         if ($model->migration) {
             $base = $model->migration->migration_code;
@@ -114,7 +153,7 @@ class MigrationsController extends BaseController
             "/->validation\(['\"](.*?)['\"]\)/" => ''
         ])
             ->renameFile(date('Y_m_d') . '_' . time() . '_create_' . $model->table_name . '_table.php')
-            ->moveFile(config('directories.migrations'));
+            ->moveMigration(config('directories.migrations'));
 
         $model->migration->update(['created' => true]);
         return redirect()->route('catapult.migrations.index');
