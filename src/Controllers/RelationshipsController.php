@@ -61,6 +61,9 @@ class RelationshipsController extends BaseController
             $model->relationships()->create($relationship);
         }
 
+        $model->updated = true;
+        $model->save();
+        
         return redirect()->back();
     }
 
