@@ -112,16 +112,16 @@ class MigrationsController extends BaseController
             'migration_code' => 'required',
             'validation' => 'nullable',
         ]);
-
-        $valid['created'] = false;
-
+        
         if ($model->migration) {
+            $valid['updated'] = true;
+
             $model->migration()->update($valid);
         } else {
             $model->migration()->create($valid);
         }
 
-        return redirect()->back();
+        return redirect()->route('catapult.migrations.index');  
     }
 
     public function destroy(CatapultMigration $migration)
@@ -155,7 +155,7 @@ class MigrationsController extends BaseController
             ->renameFile(date('Y_m_d') . '_' . time() . '_create_' . $model->table_name . '_table.php')
             ->moveMigration(config('directories.migrations'));
 
-        $model->migration->update(['created' => true]);
+        $model->migration->update(['created' => true, 'updated' => false]);
         return redirect()->route('catapult.migrations.index');
     }
 }

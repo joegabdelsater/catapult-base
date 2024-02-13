@@ -19,29 +19,35 @@
                     @endif
                 </div>
                 <div class="flex flex-row items-center">
-                    @if ($model->migration && !$model->migration->created)
-                        <span class="text-xs text-rose-500 mr-2 group-hover:text-white">Migration exists but not
-                            created</span>
-                        <form action="{{ route('catapult.migrations.destroy', ['migration' => $model->migration->id]) }}"
-                            method="POST">
-                            @csrf
-                            @method('DELETE')
-                            <button type="submit"
-                                class="focus:outline-none text-white bg-red-700 hover:bg-red-800 focus:ring-4 focus:ring-red-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-900">
-                                @component('catapult::components.icons.delete', ['fill' => 'white'])
-                                @endcomponent
-                            </button>
+                    @if ($model->migration)
+                        @if (!$model->migration->created || $model->migration->updated)
+                            @if ($model->migration->updated)
+                            <span class="text-xs text-rose-500 mr-2 group-hover:text-white">Update not applied</span>
+                            @endif
+                            <form
+                                action="{{ route('catapult.migrations.destroy', ['migration' => $model->migration->id]) }}"
+                                method="POST">
+                                @csrf
+                                @method('DELETE')
+                                <button type="submit"
+                                    class="focus:outline-none text-white bg-red-700 hover:bg-red-800 focus:ring-4 focus:ring-red-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-900">
+                                    @component('catapult::components.icons.delete', ['fill' => 'white'])
+                                    @endcomponent
+                                </button>
 
-                        </form>
+                            </form>
 
-                        <form action="{{ route('catapult.migrations.generate', ['model' => $model->id]) }}" method="POST">
-                            @csrf
+                            <form action="{{ route('catapult.migrations.generate', ['model' => $model->id]) }}"
+                                method="POST">
+                                @csrf
 
-                            <button type="submit"
-                                class="focus:outline-none text-white bg-green-700 hover:bg-green-800 focus:ring-4 focus:ring-green-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-800">Create</button>
-                        </form>
+                                <button type="submit"
+                                    class="focus:outline-none text-white bg-green-700 hover:bg-green-800 focus:ring-4 focus:ring-green-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-800">{{$model->migration->updated ? 'Apply update': 'Generate migration' }}</button>
+                            </form>
+                        @endif
                     @endif
-                    @if ($model->migration && $model->migration->created)
+
+                    @if ($model->migration && $model->migration->created && !$model->migration->updated)
                         <span class="text-xs text-green-500 mr-2 group-hover:text-white">Migration created</span>
                         <div>
                             @component('catapult::components.icons.checkmark-circle', ['class' => 'h-5 w-5', 'fill' => 'green'])

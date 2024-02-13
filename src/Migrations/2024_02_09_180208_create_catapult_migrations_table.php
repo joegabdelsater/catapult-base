@@ -15,8 +15,8 @@ return new class extends Migration
             $table->id();
             $table->foreignId('model_id')->onDelete('cascade');
             $table->text('migration_code')->nullable();
-            $table->string('validation')->nullable();
             $table->boolean('created')->default(false);
+            $table->boolean('updated')->default(false);
             $table->timestamps();
         });
     }
