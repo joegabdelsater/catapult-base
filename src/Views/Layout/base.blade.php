@@ -18,28 +18,28 @@
             <ul class="space-y-2 font-medium">
                 <li>
                     <a href="{{ route('catapult.welcome') }}"
-                        class="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group">
+                        class="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-700 {{ Route::currentRouteName() === 'catapult.welcome' ? 'bg-gray-700' : '' }} group">
                         <span class="ms-3">Dashboard</span>
                     </a>
                 </li>
 
                 <li>
                     <a href="{{ route('catapult.models.create') }}"
-                        class="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group">
+                        class="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-700 {{ Route::currentRouteName() === 'catapult.models.create' ? 'bg-gray-700' : '' }}  group">
                         <span class="ms-3">Models</span>
                     </a>
                 </li>
 
                 <li>
                     <a href="{{ route('catapult.relationships.index') }}"
-                        class="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group">
+                        class="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-700 {{ str_contains(Route::currentRouteName(),'catapult.relationships') ? 'bg-gray-700' : '' }}  group">
                         <span class="ms-3">Relationships</span>
                     </a>
                 </li>
 
                 <li>
                     <a href="{{ route('catapult.migrations.index') }}"
-                        class="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group">
+                        class="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-700 {{  str_contains(Route::currentRouteName(),'catapult.migrations') ? 'bg-gray-700' : '' }}  group">
                         <span class="ms-3">Migrations & Validation</span>
                     </a>
                 </li>
