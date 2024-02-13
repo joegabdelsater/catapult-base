@@ -43,13 +43,13 @@
                         <span class="ms-3">Migrations & Validation</span>
                     </a>
                 </li>
-                <li>
+                {{-- <li>
                     <a href="{{ route('catapult.generate') }}"
                         onclick="return confirm('Are you sure you want to generate the project? This will overwrite any existing files.')"
                         class="p-2 text-gray-900 rounded-lg dark:text-white bg-rose-800 text-center block">
                         Generate
                     </a>
-                </li>
+                </li> --}}
             </ul>
         </div>
     </aside>
