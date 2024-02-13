@@ -19,22 +19,36 @@ class MigrationsController extends BaseController
         $models = Model::with('migration', 'relationships')->get();
 
         $models = $models->map(function ($model) {
-            $warning = null;
+            $warning = false;
 
-            $belongsTo = $model->relationships->filter(function ($relationship) {
+            $belongsToRelationships = $model->relationships->filter(function ($relationship) {
                 return $relationship->relationship_method === 'belongsTo';
             });
 
-            if (count($belongsTo)) {
-                $warnings = $belongsTo->pluck('relationship_model');
-                $warning = 'Make sure to create the ' . implode(' & ', $warnings->toArray()) . ' migration(s) first!';
+            if (count($belongsToRelationships) > 0) {
+                $belongsTo = $belongsToRelationships->filter(function ($relationship) {
+                    return !Model::where('name', str_replace('::class', '', $relationship->relationship_model))->first()->migration->created;
+                });
+
+
+
+                if ($belongsTo->count() > 0) {
+                    $warnings = $belongsTo->pluck('relationship_model');
+                    $warnings = $warnings->map(function ($warning) {
+                        return str_replace('::class', '.php', $warning);
+                    });
+                    $warning = 'Make sure to generate the ' . implode(' & ', $warnings->toArray()) . ' migration(s) first!';
+                }
             }
 
             $model->warning_message = $warning;
             return $model;
         });
+
+        // dd($models->toArray());
         return view('catapult::migrations.index', compact('models'));
     }
+
 
     public function create(Model $model)
     {
@@ -112,7 +126,7 @@ class MigrationsController extends BaseController
             'migration_code' => 'required',
             'validation' => 'nullable',
         ]);
-        
+
         if ($model->migration) {
             $valid['updated'] = true;
 
@@ -121,7 +135,7 @@ class MigrationsController extends BaseController
             $model->migration()->create($valid);
         }
 
-        return redirect()->route('catapult.migrations.index');  
+        return redirect()->route('catapult.migrations.index');
     }
 
     public function destroy(CatapultMigration $migration)

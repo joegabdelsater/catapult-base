@@ -10,10 +10,10 @@
 
         @foreach ($models as $model)
             <div
-                class="text-gray-700 block font-bold model group hover:text-white mb-16 border-2 border-dashed hover:border-solid p-4 rounded-md mb-4 hover:bg-gray-700 flex flex-row justify-between items-center">
+                class="text-gray-700 block font-bold model group mb-16 border-2 border-dashed hover:border-solid p-4 rounded-md mb-4 hover:bg-gray-700 flex flex-row justify-between items-center">
                 <div class="flex flex-row items-center">
                     <a href="{{ route('catapult.migrations.create', ['model' => $model->id]) }}"
-                        class="mr-4">{{ $model->name }}.php</a>
+                        class="mr-4 bg-green-200 rounded-md px-4 py-2">{{ $model->name }}.php</a>
                     @if ($model->migration && !$model->migration->created)
                         <p class="font-regular text-sm text-orange-400">{{ $model->warning_message }}</p>
                     @endif
@@ -22,7 +22,7 @@
                     @if ($model->migration)
                         @if (!$model->migration->created || $model->migration->updated)
                             @if ($model->migration->updated)
-                            <span class="text-xs text-rose-500 mr-2 group-hover:text-white">Update not applied</span>
+                                <span class="text-xs text-rose-500 mr-2 group-hover:text-white">Update not applied</span>
                             @endif
                             <form
                                 action="{{ route('catapult.migrations.destroy', ['migration' => $model->migration->id]) }}"
@@ -41,8 +41,8 @@
                                 method="POST">
                                 @csrf
 
-                                <button type="submit"
-                                    class="focus:outline-none text-white bg-green-700 hover:bg-green-800 focus:ring-4 focus:ring-green-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-800">{{$model->migration->updated ? 'Apply update': 'Generate migration' }}</button>
+                                <button type="submit" {{ $model->warning_message ? 'disabled' : ''}}
+                                    class="focus:outline-none text-white bg-green-700 hover:bg-green-800 focus:ring-4 focus:ring-green-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-800 group-hover:disabled:bg-white group-hover:disabled:text-gray-700 disabled:bg-gray-700">{{ $model->migration->updated ? 'Apply update' : 'Generate migration' }}</button>
                             </form>
                         @endif
                     @endif
