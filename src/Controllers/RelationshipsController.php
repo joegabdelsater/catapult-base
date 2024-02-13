@@ -63,12 +63,18 @@ class RelationshipsController extends BaseController
 
         $model->updated = true;
         $model->save();
-        
-        return redirect()->back();
+
+        return redirect()->route('catapult.relationships.index');
     }
 
-    public function destroy($relationshipId)
-    {
+    public function destroy( $modelId, $relationshipId)
+    {       
+
+        $model = Model::find($modelId);
+        $model->updated = true; 
+        
+        $model->save();
+
         Relationship::destroy($relationshipId);
         return response()->json(['message' => 'Relationship deleted']);
     }

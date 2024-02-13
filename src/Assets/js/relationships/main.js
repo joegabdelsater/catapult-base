@@ -30,10 +30,9 @@ document.addEventListener('DOMContentLoaded', function () {
     });
 });
 
-function deleteRelationship(relationshipId) {
-
+function deleteRelationship(relationshipId, modelId) {
     if (confirm('Are you sure you want to delete this relationship from database?')) {
-        fetch(`/catapult/relationships/${relationshipId}/destroy`, {
+        fetch(`/catapult/model/${modelId}/relationships/${relationshipId}/destroy`, {
             method: 'POST',
                 headers: {
                     'X-Requested-With': 'XMLHttpRequest',

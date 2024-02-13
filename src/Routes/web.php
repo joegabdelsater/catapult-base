@@ -21,7 +21,7 @@ Route::prefix('catapult')
         Route::get('/relationships', [RelationshipsController::class, 'index'])->name('relationships.index');
         Route::get('/models/{modelId}/relationships', [RelationshipsController::class, 'create'])->name('relationships.create');
         Route::post('/relationships/{model}', [RelationshipsController::class, 'store'])->name('relationships.store');
-        Route::post('/relationships/{relationship}/destroy', [RelationshipsController::class, 'destroy'])->name('relationships.destroy');
+        Route::post('/model/{modelId}/relationships/{relationshipId}/destroy', [RelationshipsController::class, 'destroy'])->name('relationships.destroy');
 
         Route::get('/migrations', [MigrationsController::class, 'index'])->name('migrations.index');
         Route::get('/models/{model}/migrations', [MigrationsController::class, 'create'])->name('migrations.create');

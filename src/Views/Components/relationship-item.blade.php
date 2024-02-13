@@ -48,7 +48,7 @@
 
  
 
-        <button onclick="deleteRelationship('{{ $current->id }}')"
+        <button onclick="deleteRelationship('{{ $current->id }}', '{{ $current->model_id }}')"
             type="button"
             class="bg-red-600 rounded-r-md flex items-center justify-center h-full w-full">
             <div class="delete-btn">
