@@ -13,6 +13,9 @@ Route::prefix('catapult')
         Route::get('/', [JourneyController::class, 'index'])->name('welcome');
         Route::get('/models', [ModelsController::class, 'create'])->name('models.create');
         Route::post('/models', [ModelsController::class, 'store'])->name('models.store');
+        Route::get('/models/{model}/generate', [ModelsController::class, 'generate'])->name('models.generate');
+        Route::get('/models/generate', [ModelsController::class, 'generateAll'])->name('models.generate-all');
+
         Route::post('/models/{model}/delete', [ModelsController::class, 'destroy'])->name('models.destroy');
 
         Route::get('/relationships', [RelationshipsController::class, 'index'])->name('relationships.index');

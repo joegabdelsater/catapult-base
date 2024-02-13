@@ -6,12 +6,44 @@ use Illuminate\Routing\Controller as BaseController;
 use Illuminate\Http\Request;
 use Joegabdelsater\CatapultBase\Models\Model;
 use Illuminate\Support\Str;
+use Joegabdelsater\CatapultBase\Builders\ClassGenerator;
+use Joegabdelsater\CatapultBase\Builders\Models\ModelBuilder;
+
 class ModelsController extends BaseController
 {
     public function create()
     {
         $models = Model::all();
         return view('catapult::models.create', compact('models'));
+    }
+
+    public function generate(Model $model)
+    {
+        $model = Model::with('relationships')->find($model->id);
+
+        $modelBuilder = new ModelBuilder($model);
+        $modelGenerator = new ClassGenerator(filePath: config('directories.models'), fileName: $model->name . '.php', content: $modelBuilder->build());
+        $modelGenerator->generate();
+
+        $model->created = true;
+        $model->save();
+
+        return redirect()->back();
+    }
+
+    public function generateAll() {
+        $models = Model::with('relationships')->get();
+
+        foreach ($models as $model) {
+            $modelBuilder = new ModelBuilder($model);
+            $modelGenerator = new ClassGenerator(filePath: config('directories.models'), fileName: $model->name . '.php', content: $modelBuilder->build());
+            $modelGenerator->generate();
+
+            $model->created = true;
+            $model->save();
+        }
+
+        return redirect()->back();
     }
 
     public function store(Request $request)
@@ -36,7 +68,7 @@ class ModelsController extends BaseController
     }
 
     public function getTableName($snakeCaseTableName)
-    {   
+    {
         return Str::plural($snakeCaseTableName);
     }
 
