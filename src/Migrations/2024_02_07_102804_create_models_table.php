@@ -18,6 +18,7 @@ return new class extends Migration
             $table->boolean('has_translations')->default(false);
             $table->boolean('only_guard_id')->default(false);
             $table->boolean('has_validation_request')->default(false);
+            $table->boolean('created')->default(false);
             $table->timestamps();
         });
     }
