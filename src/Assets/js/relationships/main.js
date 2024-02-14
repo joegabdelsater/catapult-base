@@ -48,3 +48,23 @@ function deleteRelationship(relationshipId, modelId) {
             });
     }
 }
+
+function deleteRoute(routeId, controllerId) {
+
+    if (confirm('Are you sure you want to delete this route from database?')) {
+        fetch(`/catapult/controller/${controllerId}/route/${routeId}/destroy`, {
+            method: 'POST',
+                headers: {
+                    'X-Requested-With': 'XMLHttpRequest',
+                    'X-CSRF-TOKEN': csrfToken
+            },
+        })
+            .then(response => {
+                if (response.ok) {
+                    location.reload();
+                } else {
+                    alert('Failed to delete the route');
+                }
+            });
+    }
+}

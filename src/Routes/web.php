@@ -51,7 +51,7 @@ Route::prefix('catapult')
             Route::post('/controller/{controller}/routes', 'store')->name('routes.store');
             Route::get('/routes/{controller}/generate', 'generate')->name('routes.generate');
             Route::get('/routes/generate', 'generateAll')->name('routes.generate-all');
-            Route::post('/routes/{controller}/delete', 'destroy')->name('routes.destroy');
+            Route::post('/controller/{controller}/route/{route}/destroy', 'destroy')->name('routes.destroy');
         });
 
 

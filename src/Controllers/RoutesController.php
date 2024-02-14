@@ -5,8 +5,9 @@ namespace Joegabdelsater\CatapultBase\Controllers;
 
 use Illuminate\Routing\Controller as BaseController;
 use Illuminate\Http\Request;
+use Joegabdelsater\CatapultBase\Models\Route;
 use Joegabdelsater\CatapultBase\Models\CatapultController;
-use Joegabdelsater\CatapultBase\Models\Model;
+
 
 class RoutesController extends BaseController
 {
@@ -18,52 +19,45 @@ class RoutesController extends BaseController
     }
     public function create($controllerId)
     {
-        $controller = CatapultController::find($controllerId);
+        $controller = CatapultController::with('routes')->find($controllerId);
         $supportedRoutes = config('routes.supported');
 
-        return view('catapult::routes.create', compact('controller', 'supportedRoutes'));
-    }
+        $existing = [];
 
-    public function store(Request $request, Model $model)
-    {
-        $request->validate([
-            'r.*' => 'array',
-            'r.*.relationship' => 'required',
-            'r.*.relationship_method_name' => 'required',
-            'r.*.foreign_key' => 'sometimes',
-            'r.*.local_key' => 'sometimes',
-            'r.*.owner_key' => 'sometimes',
-            'r.*.model' => 'required',
-            'r.*.relationship_model' => 'required',
-            'r.*.relationship_method' => 'required',
-            'r.*.id' => 'sometimes',
-        ]);
-
-
-        foreach ($request->r as $relationship) {
-            if (isset($relationship['id'])) {
-                $model->relationships()->find($relationship['id'])->update($relationship);
-                continue;
-            }
-
-            $model->relationships()->create($relationship);
+        foreach ($supportedRoutes as $key => $route) {
+            $existing[$route] = $controller->routes->filter(function ($value, $key) use ($route) {
+                return $value->method == $route;
+            });
         }
 
-        $model->updated = true;
-        $model->save();
-
-        return redirect()->route('catapult.relationships.index');
+        return view('catapult::routes.create', compact('controller', 'supportedRoutes', 'existing'));
     }
 
-    public function destroy( $modelId, $relationshipId)
-    {       
+    public function store(Request $request, CatapultController $controller)
+    {
+        $valid = $request->validate([
+            'method' => 'required',
+            'route_name' => 'nullable',
+            'route_path' => 'required',
+            'controller_method' => 'required',
+        ]);
 
-        $model = Model::find($modelId);
-        $model->updated = true; 
-        
-        $model->save();
+        $valid['controller_id'] = $controller->id;
 
-        Relationship::destroy($relationshipId);
-        return response()->json(['message' => 'Relationship deleted']);
+        $controller->routes()->create($valid);
+
+        $controller->updated = true;
+        $controller->save();
+
+        return redirect()->back();
+    }
+
+    public function destroy(CatapultController $controller, Route $route)
+    {
+        $route->delete();
+        $controller->updated = true;
+        $controller->save();
+
+        return response()->json(['message' => 'Route deleted']);
     }
 }
