@@ -60,4 +60,6 @@ class RoutesController extends BaseController
 
         return response()->json(['message' => 'Route deleted']);
     }
+
+   
 }

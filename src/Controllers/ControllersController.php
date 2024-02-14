@@ -35,6 +35,7 @@ class ControllersController extends BaseController
 
     public function generate(CatapultController $controller)
     {
+        $controller = CatapultController::with('routes')->find($controller->id);
         ControllerService::generate($controller);
         return redirect()->route('catapult.controllers.create');
     }
