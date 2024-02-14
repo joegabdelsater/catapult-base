@@ -6,7 +6,7 @@ use Illuminate\Routing\Controller as BaseController;
 use Illuminate\Http\Request;
 use Joegabdelsater\CatapultBase\Models\Model;
 use Illuminate\Support\Str;
-use Joegabdelsater\CatapultBase\Classes\ModelProvider;
+use Joegabdelsater\CatapultBase\Classes\ModelService;
 class ModelsController extends BaseController
 {
     public function create()
@@ -18,7 +18,7 @@ class ModelsController extends BaseController
     public function generate(Model $model)
     {
         $model = Model::with('relationships')->find($model->id);
-        ModelProvider::generate($model);
+        ModelService::generate($model);
 
         return redirect()->back();
     }
@@ -27,7 +27,7 @@ class ModelsController extends BaseController
         $models = Model::with('relationships')->get();
 
         foreach ($models as $model) {
-            ModelProvider::generate($model);
+            ModelService::generate($model);
         }
 
         return redirect()->back();

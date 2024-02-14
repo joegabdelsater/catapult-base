@@ -5,7 +5,7 @@ namespace Joegabdelsater\CatapultBase\Classes;
 use Joegabdelsater\CatapultBase\Builders\ClassGenerator;
 use Joegabdelsater\CatapultBase\Builders\Models\ModelBuilder;
 
-class ModelProvider
+class ModelService
 {
     public static function generate(Object $model)
     {
