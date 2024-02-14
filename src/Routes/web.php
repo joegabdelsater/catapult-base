@@ -46,10 +46,10 @@ Route::prefix('catapult')
         });
 
         Route::controller(RoutesController::class)->group(function () {
-            Route::get('/index', 'index')->name('routes.index');
+            Route::get('/routes', 'index')->name('routes.index');
             Route::get('controller/{controllerId}/routes', 'create')->name('routes.create');
             Route::post('/controller/{controller}/routes', 'store')->name('routes.store');
-            Route::get('/routes/{controller}/generate', 'generate')->name('routes.generate');
+            // Route::get('/routes/{controller}/generate', 'generate')->name('routes.generate');
             Route::get('/routes/generate', 'generateAll')->name('routes.generate-all');
             Route::post('/controller/{controller}/route/{route}/destroy', 'destroy')->name('routes.destroy');
         });

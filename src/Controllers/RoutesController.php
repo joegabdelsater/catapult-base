@@ -15,7 +15,7 @@ class RoutesController extends BaseController
     public function index()
     {
         $controllers = CatapultController::with('routes')->get();
-        return view('catapult::controllers.index', compact('controllers'));
+        return view('catapult::routes.index', compact('controllers'));
     }
     public function create($controllerId)
     {
@@ -59,6 +59,12 @@ class RoutesController extends BaseController
         $controller->save();
 
         return response()->json(['message' => 'Route deleted']);
+    }
+
+    public function generate()
+    {
+     
+        return redirect()->route('catapult.controllers.create');
     }
 
    

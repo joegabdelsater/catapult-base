@@ -3,7 +3,6 @@
 namespace Joegabdelsater\CatapultBase\Builders\Controllers;
 
 use Joegabdelsater\CatapultBase\Interfaces\Builder;
-use Joegabdelsater\CatapultBase\Models\CatapultController;
 use Joegabdelsater\CatapultBase\Models\Model;
 
 class ControllerBuilder implements Builder
