@@ -28,7 +28,7 @@ class ValidationBuilder implements Builder
             $validationRules[] = "'$key' => '$value'";
         }
 
-        $validationRules = implode(",\n", $validationRules);
+        $validationRules = implode(",\n\t\t\t", $validationRules);
 
         return <<<PHP
             <?php
