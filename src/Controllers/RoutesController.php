@@ -19,9 +19,9 @@ class RoutesController extends BaseController
     public function create($controllerId)
     {
         $controller = CatapultController::find($controllerId);
-        $availableRoutes = config('catapult.routes');
- 
-        return view('catapult::routes.create', compact('controller'));
+        $supportedRoutes = config('routes.supported');
+
+        return view('catapult::routes.create', compact('controller', 'supportedRoutes'));
     }
 
     public function store(Request $request, Model $model)

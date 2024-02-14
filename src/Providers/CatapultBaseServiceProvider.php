@@ -17,6 +17,8 @@ class CatapultBaseServiceProvider extends ServiceProvider
         $this->mergeConfigFrom(__DIR__ . '/../config/relationships.php','relationships');
         $this->mergeConfigFrom(__DIR__ . '/../config/directories.php','directories');
         $this->mergeConfigFrom(__DIR__ . '/../config/migrations.php','migrations');
+        $this->mergeConfigFrom(__DIR__ . '/../config/routes.php','routes');
+
 
 
 
