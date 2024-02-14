@@ -32,25 +32,31 @@
 
                 <li>
                     <a href="{{ route('catapult.relationships.index') }}"
-                        class="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-700 {{ str_contains(Route::currentRouteName(),'catapult.relationships') ? 'bg-gray-700' : '' }}  group">
+                        class="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-700 {{ str_contains(Route::currentRouteName(), 'catapult.relationships') ? 'bg-gray-700' : '' }}  group">
                         <span class="ms-3">Relationships</span>
                     </a>
                 </li>
 
                 <li>
                     <a href="{{ route('catapult.migrations.index') }}"
-                        class="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-700 {{  str_contains(Route::currentRouteName(),'catapult.migrations') ? 'bg-gray-700' : '' }}  group">
+                        class="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-700 {{ str_contains(Route::currentRouteName(), 'catapult.migrations') ? 'bg-gray-700' : '' }}  group">
                         <span class="ms-3">Migrations & Validation</span>
                     </a>
                 </li>
-                {{-- <li>
-                    <a href="{{ route('catapult.generate') }}"
-                        onclick="return confirm('Are you sure you want to generate the project? This will overwrite any existing files.')"
-                        class="p-2 text-gray-900 rounded-lg dark:text-white bg-rose-800 text-center block">
-                        Generate
+
+                <li>
+                    <a href="{{ route('catapult.controllers.create') }}"
+                        class="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-700 {{ str_contains(Route::currentRouteName(), 'catapult.controllers') ? 'bg-gray-700' : '' }}  group">
+                        <span class="ms-3">Controllers</span>
                     </a>
-                </li> --}}
-            </ul>
+                </li>
+
+                <li>
+                    <a href="{{ route('catapult.routes.index') }}"
+                        class="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-700 {{ str_contains(Route::currentRouteName(), 'catapult.routes') ? 'bg-gray-700' : '' }}  group">
+                        <span class="ms-3">Routes</span>
+                    </a>
+                </li>
         </div>
     </aside>
 
