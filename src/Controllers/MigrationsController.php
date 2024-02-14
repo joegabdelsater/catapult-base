@@ -27,9 +27,13 @@ class MigrationsController extends BaseController
 
             if (count($belongsToRelationships) > 0) {
                 $belongsTo = $belongsToRelationships->filter(function ($relationship) {
-                    return !Model::where('name', str_replace('::class', '', $relationship->relationship_model))->first()->migration->created;
+                    $model = Model::where('name', str_replace('::class', '', $relationship->relationship_model))->first();
+                    if($model->migration) {
+                        return !$model->migration->created;
+                    } else {
+                        return true;
+                    }   
                 });
-
 
 
                 if ($belongsTo->count() > 0) {
