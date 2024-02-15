@@ -58,10 +58,10 @@ class ControllerBuilder implements Builder
         }
 
         $parametersCode = implode(', ', $parameters);
-
+        $returnCode = $route->route_type == 'api' ? "response()->json([])" : "view('{$route->controller_method}')";
         $code = <<<PHP
         public function $route->controller_method($parametersCode) {
-                return; // don't forget to return something!
+                return $returnCode; 
             }
         PHP;
 
