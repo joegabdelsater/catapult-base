@@ -40,6 +40,8 @@
                                                 <p>);</p>
                                             </div>
                                             <input type="hidden" name="method" value="{{ $supportedRoute }}" />
+                                            <input type="hidden" name="route_type" value="{{ $type }}" />
+
                                         </div>
 
                                         <div>

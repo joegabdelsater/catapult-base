@@ -18,6 +18,7 @@ return new class extends Migration
             $table->string('controller_method');
             $table->string('route_name')->nullable();
             $table->string('route_path');
+            $table->string('route_type');
             $table->timestamps();
         });
     }

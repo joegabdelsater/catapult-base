@@ -21,14 +21,23 @@
         @foreach ($controllers as $controller)
             <div
                 class="flex flex-row justify-between items-center group  mb-16 border-2 border-dashed hover:border-solid p-4 rounded-md mb-4 hover:bg-gray-700 ">
-                <a href="{{ route('catapult.routes.create', ['controllerId' => $controller->id]) }}"
-                    class="text-gray-700 block font-bold  bg-green-200 rounded-md px-4 py-2"><span>{{ $controller->name }}.php</span>
-                </a>
+                <div class='flex flex-row'>
+                    <p href="{{ route('catapult.routes.create', ['controllerId' => $controller->id, 'type' => 'api']) }}"
+                        class="text-gray-700 block font-bold group-hover:text-white px-4 py-2"><span>{{ $controller->name }}.php</span>
+                    </p>
+
+                    <a href="{{ route('catapult.routes.create', ['controllerId' => $controller->id, 'type' => 'web']) }}"
+                        class="text-gray-700 block font-bold  bg-green-200 rounded-md px-4 py-2 mr-2">Web
+                    </a>
+
+                    <a href="{{ route('catapult.routes.create', ['controllerId' => $controller->id, 'type' => 'api']) }}"
+                        class="text-gray-700 block font-bold  bg-green-200 rounded-md px-4 py-2">API</span>
+                    </a>
+                </div>
 
                 <div class="flex flex-row items-center">
                     @if ($controller->routes->count() > 0)
-                        <span
-                            class="text-xs text-gray-500 mr-2 group-hover:text-white">({{ $controller->routes->count() }}
+                        <span class="text-xs text-gray-500 mr-2 group-hover:text-white">({{ $controller->routes->count() }}
                             routes)</span>
                         @component('catapult::components.icons.checkmark-circle', ['class' => 'h-5 w-5', 'fill' => 'green'])
                         @endcomponent

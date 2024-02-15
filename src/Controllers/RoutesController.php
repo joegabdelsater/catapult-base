@@ -17,9 +17,11 @@ class RoutesController extends BaseController
         $controllers = CatapultController::with('routes')->get();
         return view('catapult::routes.index', compact('controllers'));
     }
-    public function create($controllerId)
+    public function create($controllerId, $type)
     {
-        $controller = CatapultController::with('routes')->find($controllerId);
+        $controller = CatapultController::with(['routes' => function ($query) use ($type) {
+            return $query->where('route_type', $type);
+        }])->find($controllerId);
         $supportedRoutes = config('routes.supported');
 
         $existing = [];
@@ -30,7 +32,7 @@ class RoutesController extends BaseController
             });
         }
 
-        return view('catapult::routes.create', compact('controller', 'supportedRoutes', 'existing'));
+        return view('catapult::routes.create', compact('controller', 'supportedRoutes', 'existing', 'type'));
     }
 
     public function store(Request $request, CatapultController $controller)
@@ -40,6 +42,7 @@ class RoutesController extends BaseController
             'route_name' => 'nullable',
             'route_path' => 'required',
             'controller_method' => 'required',
+            'route_type' => 'required'
         ]);
 
         $valid['controller_id'] = $controller->id;
