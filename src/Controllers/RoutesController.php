@@ -67,6 +67,9 @@ class RoutesController extends BaseController
     public function generateAll()
     {
        RouteService::generate();
+
+        CatapultController::whereHas('routes')->update(['updated' => true]);
+
         return redirect()->back();
     }
 

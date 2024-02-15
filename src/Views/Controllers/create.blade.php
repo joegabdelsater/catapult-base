@@ -80,14 +80,13 @@
                 @foreach ($controllers as $controller)
                     <div class="flex justify-between items-center p-3 border-b border-gray-200">
                         <div class="flex flex-row items-center">
-                            @if ($controller->created)
+                            @if ($controller->created && !$controller->updated)
                                 @component('catapult::components.icons.checkmark-circle', ['class' => 'h-5 w-5 mr-2', 'fill' => 'green'])
                                 @endcomponent
                             @else
                                 <a href="{{ route('catapult.controllers.generate', ['controller' => $controller->id]) }}"
                                     class="p-2 text-gray-500 rounded-lg text-white text-xs bg-rose-800 text-center block hover:bg-rose-900 mr-2">
-                                    Generate
-
+                                    {{ $controller->created ? 'Re-generate' : 'Generate' }}
                                 </a>
                             @endif
                             <div class="text-gray-700">{{ $controller->name }}.php</div>

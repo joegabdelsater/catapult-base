@@ -31,7 +31,5 @@ class RouteService
         $webRoutesGenerator->generate()
             ->appendToFile(config('directories.web_routes_file'), "\n\n require __DIR__ . '/catapult/web.php';");
 
-
-        /** re-generate controllers */
     }
 }
