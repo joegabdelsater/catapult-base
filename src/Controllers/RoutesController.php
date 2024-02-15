@@ -7,7 +7,7 @@ use Illuminate\Routing\Controller as BaseController;
 use Illuminate\Http\Request;
 use Joegabdelsater\CatapultBase\Models\Route;
 use Joegabdelsater\CatapultBase\Models\CatapultController;
-
+use Joegabdelsater\CatapultBase\Classes\RouteService;
 
 class RoutesController extends BaseController
 {
@@ -66,8 +66,8 @@ class RoutesController extends BaseController
 
     public function generateAll()
     {
-     
-        return redirect()->route('catapult.controllers.create');
+       RouteService::generate();
+        return redirect()->back();
     }
 
    

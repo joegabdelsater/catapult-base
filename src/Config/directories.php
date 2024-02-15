@@ -6,5 +6,7 @@ return [
     'controllers' => __DIR__ . '/../../../../../app/Http/Controllers/',
     'temp_migrations' =>  __DIR__ . '/../Temp',
     'migrations' => __DIR__ . '/../../../../../database/migrations',
-    'resources' => ''
+    'catapult_routes' => __DIR__ . '/../../../../../routes/catapult',
+    'web_routes_file' => __DIR__ . '/../../../../../routes/web.php',
+    'api_routes_file' => __DIR__ . '/../../../../../routes/api.php',
 ];

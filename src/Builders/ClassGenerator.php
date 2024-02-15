@@ -22,7 +22,7 @@ class ClassGenerator
     }
 
     public function generate()
-    {
+    {   
         file_put_contents($this->getFullPath(), $this->content);
         return $this;
     }
@@ -106,5 +106,17 @@ class ClassGenerator
             $this->setFileName($newName);
         }
         rename($oldFullPath, $this->getFullPath());
+    }
+
+    public function appendToFile($fileToAppendTo, $content) {
+        $file_content = file_get_contents($fileToAppendTo);
+
+       $file_content = str_replace($content, '', $file_content);
+
+        $file_content .=  $content;
+
+        file_put_contents($fileToAppendTo, $file_content);
+
+        return $this;
     }
 }

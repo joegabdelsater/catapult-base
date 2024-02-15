@@ -8,46 +8,79 @@ use Joegabdelsater\CatapultBase\Models\CatapultController;
 class RouteBuilder implements Builder
 {
     public $controllers;
-
+    public $routes = ['api' => [], 'web' => []];
+    public $imports = [
+        'api' => ['use Illuminate\Support\Facades\Route;'],
+        'web' => ['use Illuminate\Support\Facades\Route;']
+    ];
 
     public function __construct()
     {
         $this->controllers = CatapultController::with('routes')->get();
-
     }
 
-    public function getControllerRoutesCode($controller) {
-
-    }
-
-    public function build(): string
+    public function getControllerRoutesCode($controller)
     {
-        $imports = [
-            'use Illuminate\Support\Facades\Route;'
-        ];
+        foreach ($controller->routes as $route) {
+            $this->routes[$route->route_type][] = $this->generateRouteCode($route, $controller);
 
-        foreach($this->controllers as $controller) {
-            $imports[] = "use App\Http\Controllers\{$controller->name};";
+            if ($route->route_type == 'api') {
+                $this->imports['api'][] = "use App\Http\Controllers\\{$controller->name};";
+            } else {
+                $this->imports['web'][] = "use App\Http\Controllers\\{$controller->name};";
+            }
+        }
+
+        $this->imports['api'] = array_unique($this->imports['api']);
+        $this->imports['web'] = array_unique($this->imports['web']);
+    }
+
+    public function generateRouteCode($route, $controller)
+    {
+        $code = "Route::{$route->method}('{$route->route_path}', [{$controller->name}::class, '{$route->controller_method}'])";
+
+        if ($route->route_name) {
+            $code .= "->name('{$route->route_name}')";
+        }
+
+        $code .= ';';
+
+        return $code;
+    }
+
+    public function build(): array
+    {
+        $apiRoutes = '';
+        $webRoutes = '';
+
+        foreach ($this->controllers as $controller) {
             $this->getControllerRoutesCode($controller);
         }
 
 
+        $apiRoutesImportsCode = implode("\n", $this->imports['api']);
+        $webRoutesImportsCode = implode("\n", $this->imports['web']);
 
-     
-        $importsCode = implode("\n", $imports);
+        $apiRoutesCode = implode("\n", $this->routes['api']);
+        $webRoutesCode = implode("\n", $this->routes['web']);
 
-
-        $implements = '';
-
-        $code = <<<PHP
+        $apiRoutesCode = <<<PHP
             <?php
-            $importsCode
-
-
-
-
+            $apiRoutesImportsCode
+            
+            $apiRoutesCode
             PHP;
 
-        return $code;
+        $webRoutesCode = <<<PHP
+            <?php
+            $webRoutesImportsCode
+
+            $webRoutesCode
+            PHP;
+
+        return [
+            'api' => $apiRoutesCode,
+            'web' => $webRoutesCode
+        ];
     }
 }
