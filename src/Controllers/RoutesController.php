@@ -64,7 +64,7 @@ class RoutesController extends BaseController
         return response()->json(['message' => 'Route deleted']);
     }
 
-    public function generate()
+    public function generateAll()
     {
      
         return redirect()->route('catapult.controllers.create');
