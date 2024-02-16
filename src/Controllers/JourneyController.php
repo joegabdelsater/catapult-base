@@ -34,7 +34,7 @@ class JourneyController extends BaseController
             $currentPackage = $availablePackages[$package];
 
             $dependencyKey = $currentPackage['dev'] ? 'require-dev' : 'require';
-            $composerJson[$dependencyKey][$currentPackage['composer_require']] = '*';
+            $composerJson[$dependencyKey][$currentPackage['composer_require']] = $currentPackage['version'] ?? '*';
 
             $composerJson[$dependencyKey] = array_unique($composerJson[$dependencyKey]);
 

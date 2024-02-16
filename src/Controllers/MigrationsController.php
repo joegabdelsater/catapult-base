@@ -4,7 +4,7 @@ namespace Joegabdelsater\CatapultBase\Controllers;
 
 use Illuminate\Routing\Controller as BaseController;
 use Illuminate\Http\Request;
-use Joegabdelsater\CatapultBase\Models\Model;
+use Joegabdelsater\CatapultBase\Models\CatapultModel;
 use Joegabdelsater\CatapultBase\Models\CatapultMigration;
 use Joegabdelsater\CatapultBase\Builders\Migrations\MigrationBuilder;
 use Joegabdelsater\CatapultBase\Builders\Migrations\ValidationBuilder;
@@ -16,7 +16,7 @@ class MigrationsController extends BaseController
 
     public function index()
     {
-        $models = Model::with('migration', 'relationships')->get();
+        $models = CatapultModel::with('migration', 'relationships')->get();
 
         $models = $models->map(function ($model) {
             $warning = false;
@@ -27,7 +27,7 @@ class MigrationsController extends BaseController
 
             if (count($belongsToRelationships) > 0) {
                 $belongsTo = $belongsToRelationships->filter(function ($relationship) {
-                    $model = Model::where('name', str_replace('::class', '', $relationship->relationship_model))->first();
+                    $model = CatapultModel::where('name', str_replace('::class', '', $relationship->relationship_model))->first();
                     if($model->migration) {
                         return !$model->migration->created;
                     } else {
@@ -54,9 +54,9 @@ class MigrationsController extends BaseController
     }
 
 
-    public function create(Model $model)
+    public function create(CatapultModel $model)
     {
-        $model = Model::with(['migration', 'relationships'])->find($model->id);
+        $model = CatapultModel::with(['migration', 'relationships'])->find($model->id);
 
         //Suggest the migration foreign code based on the relationship
         // if we're in create mode
@@ -123,7 +123,7 @@ class MigrationsController extends BaseController
         return view('catapult::migrations.create', compact('model', 'availableColumnTypes', 'base'));
     }
 
-    public function store(Request $request, Model $model)
+    public function store(Request $request, CatapultModel $model)
     {
 
         $valid = $request->validate([
@@ -148,9 +148,9 @@ class MigrationsController extends BaseController
         return redirect()->back();
     }
 
-    public function generate(Model $model)
+    public function generate(CatapultModel $model)
     {
-        $model = Model::with('migration')->find($model->id);
+        $model = CatapultModel::with('migration')->find($model->id);
 
         /** Create the temp migration */
         $migrationBuilder = new MigrationBuilder($model->migration);

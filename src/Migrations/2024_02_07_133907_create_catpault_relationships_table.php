@@ -11,9 +11,9 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('relationships', function (Blueprint $table) {
+        Schema::create('catapult_relationships', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('model_id')->onDelete('cascade');
+            $table->foreignId('catapult_model_id')->onDelete('cascade');
             $table->string('relationship_method_name');
             $table->string('relationship_model');
             $table->string('relationship_method');
@@ -32,6 +32,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('relationships');
+        Schema::dropIfExists('catapult_relationships');
     }
 };

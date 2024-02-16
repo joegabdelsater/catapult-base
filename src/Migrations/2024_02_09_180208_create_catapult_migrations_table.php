@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('catapult_migrations', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('model_id')->onDelete('cascade');
+            $table->foreignId('catapult_model_id')->onDelete('cascade');
             $table->text('migration_code')->nullable();
             $table->boolean('created')->default(false);
             $table->boolean('updated')->default(false);

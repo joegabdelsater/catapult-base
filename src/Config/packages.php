@@ -4,6 +4,7 @@ return [
         "dev" => false,
         'package_name' => 'spatie/laravel-translatable',
         'composer_require' => 'spatie/laravel-translatable',
+        'version' => null,
         'post_install' => [],
         'model' => [
             'imports' => [
@@ -24,6 +25,7 @@ return [
         "dev" => false,
         'package_name' => 'spatie/laravel-sluggable',
         'composer_require' => 'spatie/laravel-sluggable',
+        'version' => null,
         'post_install' => [],
         'model' => [
             'imports' => [
@@ -41,6 +43,28 @@ return [
                     ->generateSlugsFrom('name')
                     ->saveSlugsTo('slug');
             }"],
+            'properties' => [],
+        ]
+    ],
+    'filament' => [
+        "dev" => false,
+        'package_name' => 'laravel-filament',
+        'composer_require' => 'laravel/filament',
+        'version' => '^3.2',
+        'post_install' => ['@php artisan filament:install --panels'],
+        'model' => [
+            'imports' => [
+                'use Filament\Models\Contracts\FilamentUser;',
+                'use Filament\Panel;',
+                'use Illuminate\Foundation\Auth\User as Authenticatable;'
+            ],
+            'traits' => [],
+            'extends' => ['Authenticatable'], 
+            'implements' => ['FilamentUser'],
+            'methods' => ['public function canAccessPanel(Panel $panel): bool
+            {
+                return str_ends_with($this->email, "@yourdomain.com") && $this->hasVerifiedEmail();
+            }'],
             'properties' => [],
         ]
     ]

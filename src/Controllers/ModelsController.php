@@ -4,27 +4,38 @@ namespace Joegabdelsater\CatapultBase\Controllers;
 
 use Illuminate\Routing\Controller as BaseController;
 use Illuminate\Http\Request;
-use Joegabdelsater\CatapultBase\Models\Model;
+use Joegabdelsater\CatapultBase\Models\CatapultModel;
 use Illuminate\Support\Str;
 use Joegabdelsater\CatapultBase\Classes\ModelService;
+use Joegabdelsater\CatapultBase\Models\CatapultPackage;
+
 class ModelsController extends BaseController
 {
     public function create()
-    {
-        $models = Model::all();
-        return view('catapult::models.create', compact('models'));
+    {   
+        $availablePackages = config('packages');
+        $packages = CatapultPackage::all()->pluck('package_key');
+        $currentPackages = [];
+
+        foreach($packages as $package) {
+            $currentPackages[$package] = $availablePackages[$package];
+        }
+
+        $models = CatapultModel::all();
+
+        return view('catapult::models.create', compact('models', 'currentPackages'));
     }
 
-    public function generate(Model $model)
+    public function generate(CatapultModel $model)
     {
-        $model = Model::with('relationships')->find($model->id);
+        $model = CatapultModel::with('relationships')->find($model->id);
         ModelService::generate($model);
 
         return redirect()->back();
     }
 
     public function generateAll() {
-        $models = Model::with('relationships')->get();
+        $models = CatapultModel::with('relationships')->get();
 
         foreach ($models as $model) {
             ModelService::generate($model);
@@ -34,21 +45,24 @@ class ModelsController extends BaseController
     }
 
     public function store(Request $request)
-    {
+    {   
+
+
         $valid = $request->validate([
-            'name' => 'required|unique:models',
+            'name' => 'required|unique:catapult_models',
             'table_name' => 'nullable|unique:models,table_name',
             'only_guard_id' => 'nullable',
-            'has_translations' => 'nullable',
-            'has_validation_request' => 'nullable',
+            'packages' => 'nullable|array',
+            'packages.*' => 'string'
         ]);
 
-        Model::create([
+
+        CatapultModel::create([
             'name' => trim(ucfirst($valid['name'])),
             'table_name' => $valid['table_name'] ?? $this->getTableName(Str::snake($valid['name'])),
             'only_guard_id' => $request->has('only_guard_id'),
-            'has_translations' => $request->has('has_translations'),
-            'has_validation_request' => $request->has('has_validation_request'),
+            'packages' => isset($valid['packages']) ? array_keys($valid['packages']) : null
+
         ]);
 
         return redirect()->back();
@@ -59,9 +73,9 @@ class ModelsController extends BaseController
         return Str::plural($snakeCaseTableName);
     }
 
-    public function destroy(Model $model)
+    public function destroy(CatapultModel $model)
     {
-        Model::destroy($model->id);
+        CatapultModel::destroy($model->id);
         return redirect()->back();
     }
 }

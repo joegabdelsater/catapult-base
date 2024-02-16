@@ -2,14 +2,14 @@
 
 namespace Joegabdelsater\CatapultBase\Builders\Models;
 
-use Joegabdelsater\CatapultBase\Models\Relationship;
+use Joegabdelsater\CatapultBase\Models\CatapultRelationship;
 use Joegabdelsater\CatapultBase\Interfaces\Builder;
 
 class RelationshipBuilder implements Builder
 {
     private $relationship;
 
-    public function __construct(Relationship $relationship)
+    public function __construct(CatapultRelationship $relationship)
     {
         $this->relationship = $relationship;
     }

@@ -3,7 +3,7 @@
 namespace Joegabdelsater\CatapultBase\Builders\Controllers;
 
 use Joegabdelsater\CatapultBase\Interfaces\Builder;
-use Joegabdelsater\CatapultBase\Models\Model;
+use Joegabdelsater\CatapultBase\Models\CatapultModel;
 
 class ControllerBuilder implements Builder
 {
@@ -47,7 +47,7 @@ class ControllerBuilder implements Builder
         }
 
         foreach ($matches[1] as $match) {
-            $isModel = Model::where('name', ucfirst($match))->first();
+            $isModel = CatapultModel::where('name', ucfirst($match))->first();
 
             if ($isModel) {
                 $imports[] = 'use App\Models\\' . ucfirst($match) . ';';

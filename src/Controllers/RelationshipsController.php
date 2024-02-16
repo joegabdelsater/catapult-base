@@ -5,21 +5,21 @@ namespace Joegabdelsater\CatapultBase\Controllers;
 
 use Illuminate\Routing\Controller as BaseController;
 use Illuminate\Http\Request;
-use Joegabdelsater\CatapultBase\Models\Model;
-use Joegabdelsater\CatapultBase\Models\Relationship;
+use Joegabdelsater\CatapultBase\Models\CatapultModel;
+use Joegabdelsater\CatapultBase\Models\CatapultRelationship;
 
 class RelationshipsController extends BaseController
 {
 
     public function index()
-    {
-        $models = Model::with('relationships')->get();
+    {   
+        $models = CatapultModel::with('relationships')->get();
         return view('catapult::relationships.index', compact('models'));
     }
     public function create($modelId)
     {
-        $model = Model::find($modelId);
-        $models = Model::all();
+        $model = CatapultModel::find($modelId);
+        $models = CatapultModel::all();
 
         $supportedRelationships = config('relationships.supported');
         $relationshipMethodParameters = config('relationships.function_parameters');
@@ -27,7 +27,7 @@ class RelationshipsController extends BaseController
         $exitsting = [];
 
         foreach($supportedRelationships as $key => $relationship){
-            $existing[$key] = Relationship::where([
+            $existing[$key] = CatapultRelationship::where([
                 'relationship' => $key,
                 'model_id' => $modelId
             ])->get();
@@ -36,7 +36,7 @@ class RelationshipsController extends BaseController
         return view('catapult::relationships.create', compact('model', 'models', 'supportedRelationships', 'relationshipMethodParameters', 'existing'));
     }
 
-    public function store(Request $request, Model $model)
+    public function store(Request $request, CatapultModel $model)
     {
         $request->validate([
             'r.*' => 'array',
@@ -70,12 +70,12 @@ class RelationshipsController extends BaseController
     public function destroy( $modelId, $relationshipId)
     {       
 
-        $model = Model::find($modelId);
+        $model = CatapultModel::find($modelId);
         $model->updated = true; 
         
         $model->save();
 
-        Relationship::destroy($relationshipId);
+        CatapultRelationship::destroy($relationshipId);
         return response()->json(['message' => 'Relationship deleted']);
     }
 }

@@ -3,16 +3,20 @@
 namespace Joegabdelsater\CatapultBase\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Model as BaseModel;
+use Illuminate\Database\Eloquent\Model;
 
-class Model extends BaseModel
+class CatapultModel extends Model
 {
     use HasFactory;
     protected $guarded = ['id'];
-
+    protected $casts = [
+        'packages' => 'array'
+    ];
+    
+    protected $table = 'catapult_models';
     public function relationships()
     {
-        return $this->hasMany(Relationship::class);
+        return $this->hasMany(CatapultRelationship::class);
     }
 
     public function migration()

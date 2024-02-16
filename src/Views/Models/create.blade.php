@@ -34,12 +34,7 @@
                         name (Optional)</label>
                 </div>
 
-                <div class="flex items-center mb-4">
-                    <input type="checkbox" id="has_translations" name="has_translations"
-                        class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:border-gray-600">
-                    <label for="has_translations" class="ms-2 text-sm font-medium text-gray-400 dark:text-gray-500">You
-                        model will have translatable fields (Spatie/Translatable)</label>
-                </div>
+
 
                 <div class="flex items-center mb-4">
                     <input type="checkbox" id="only_guard_id" name="only_guard_id"
@@ -48,13 +43,19 @@
                         Guard id (protected $guarded = ['id'])</label>
                 </div>
 
-                <div class="flex items-center mb-4">
-                    <input type="checkbox" id="has_validation_request" name="has_validation_request"
-                        class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:border-gray-600"
-                        checked>
-                    <label for="has_validation_request"
-                        class="ms-2 text-sm font-medium text-gray-400 dark:text-gray-500">Create validation request</label>
-                </div>
+                @if (count($currentPackages) > 0)
+                    <p class="mb-4 font-bold">You model uses any of the packages you installed with catapult?</p>
+                    @foreach ($currentPackages as $packageKey => $package)
+                        <div class="flex items-center mb-4">
+                            <input type="checkbox" id="{{ $packageKey }}" name="packages[{{ $packageKey }}]"
+                                class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:border-gray-600">
+                            <label for="{{ $packageKey }}"
+                                class="ms-2 text-sm font-medium text-gray-400 dark:text-gray-500">{{ $package['package_name'] }}</label>
+                        </div>
+                    @endforeach
+                @endif
+
+
 
                 <div class="flex flex-row justify-end">
                     <button type="submit"
