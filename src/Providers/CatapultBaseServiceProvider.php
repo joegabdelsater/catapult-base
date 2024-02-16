@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\View;
 use Joegabdelsater\CatapultBase\Models\CatapultController;
 use Joegabdelsater\CatapultBase\Models\CatapultMigration;
 use Joegabdelsater\CatapultBase\Models\Model as CatapultModel;
+use Joegabdelsater\CatapultBase\Console\SetupPackages;
 
 
 class CatapultBaseServiceProvider extends ServiceProvider
@@ -21,8 +22,14 @@ class CatapultBaseServiceProvider extends ServiceProvider
         $this->mergeConfigFrom(__DIR__ . '/../config/relationships.php','relationships');
         $this->mergeConfigFrom(__DIR__ . '/../config/directories.php','directories');
         $this->mergeConfigFrom(__DIR__ . '/../config/migrations.php','migrations');
+        $this->mergeConfigFrom(__DIR__ . '/../config/packages.php','packages');
         $this->mergeConfigFrom(__DIR__ . '/../config/routes.php','routes');
 
+        if ($this->app->runningInConsole()) {
+            $this->commands([
+                SetupPackages::class,
+            ]);
+        }
 
         $this->publishes([
             __DIR__ . '/../assets/js/' => public_path('joegabdelsater/catapult-base/js/'),

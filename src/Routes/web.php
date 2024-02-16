@@ -13,9 +13,8 @@ Route::prefix('catapult')
     ->middleware('web')
     ->group(function () {
         Route::get('/', [JourneyController::class, 'index'])->name('welcome');
-
-        Route::get('/composer', [JourneyController::class, 'composer']);
-
+        Route::post('packages', [JourneyController::class, 'addToComposer'])->name('packages.add-to-composer');
+        Route::get('add-package-success', [JourneyController::class, 'addPackageSuccess'])->name('packages.add-package-success');
 
         Route::controller(ModelsController::class)->group(function () {
             Route::get('/models', 'create')->name('models.create');
