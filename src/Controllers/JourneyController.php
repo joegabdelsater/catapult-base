@@ -3,12 +3,9 @@
 namespace Joegabdelsater\CatapultBase\Controllers;
 
 use Illuminate\Routing\Controller as BaseController;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Process;
-use Joegabdelsater\CatapultBase\Builders\ClassGenerator;
-use Joegabdelsater\CatapultBase\Builders\Models\ModelBuilder;
-use Joegabdelsater\CatapultBase\Models\Model;
-
+use Illuminate\Support\Composer;
+use Illuminate\Filesystem\Filesystem;
 
 class JourneyController extends BaseController
 {
@@ -31,62 +28,28 @@ class JourneyController extends BaseController
         $result = $process->wait();
     }
 
-    /** heredoc syntax */
-    public function createFile()
+    public function composer()
     {
+        $files = new Filesystem();
+        $workingPath = base_path(); 
 
-        $modelName = 'Product'; // Dynamic or static model name
-        $imports = [
-            'use Illuminate\Database\Eloquent\Model;',
-            'use Illuminate\Database\Eloquent\Factories\HasFactory;',
-            'use Spatie\Translatable\HasTranslations;',
+        $composer = new Composer($files, $workingPath);
+
+        $composerJson = json_decode(file_get_contents(base_path('composer.json')), true);
+        
+        //loop over packages add add them here
+        $composerJson['require']['new/package'] = '1.0.0';
+
+        //add the post install command for each package
+        $composerJson['scripts']['catapult-post-install-cmd'] = [
+            '@php artisan migrate --force',
         ];
 
-        $uses = [
-            'use HasFactory;',
-            'use HasTranslations;',
-        ];
+        file_put_contents(base_path('composer.json'), json_encode($composerJson, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES));
 
-        $importsCode = implode("\n", $imports);
+        $composer->dumpAutoloads();
 
-        $usesCode = implode("\n\t", $uses);
-        $extendsCode = 'Model';
-        $implements = 'SomeInterface';
-
-        $modelContent = <<<PHP
-            <?php
-            namespace App\Models;
-
-            $importsCode
-
-            class $modelName $extendsCode ? ' extends $extendsCode' : '' implements $implements ? ' implements $implements' : ''
-            {   
-                $usesCode
-
-                protected \$fillable = ['name', 'description', 'price'];
-                // Add more properties and methods here as needed
-            }
-
-            PHP;
-
-
-        $modelDir = __DIR__ . '/../../../../../app/Models';
-
-        // Create the model file
-        file_put_contents("$modelDir/$modelName.php", $modelContent);
-    }
-
-    public function generate()
-    {
-        $models = Model::with('relationships')->get();
-
-        foreach ($models as $model) {
-            $modelBuilder = new ModelBuilder($model);
-            $modelGenerator = new ClassGenerator(filePath: config('directories.models'), fileName: $model->name . '.php', content: $modelBuilder->build());
-            $modelGenerator->generate();
-        }
-
-        return redirect()->route('catapult.generate.success');
+        // After all is done run: `composer install`, then run `composer run-script catapult-post-install-cmd`
     }
 
     public function successfullyGenerated()

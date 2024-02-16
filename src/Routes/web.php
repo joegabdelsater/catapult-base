@@ -14,6 +14,9 @@ Route::prefix('catapult')
     ->group(function () {
         Route::get('/', [JourneyController::class, 'index'])->name('welcome');
 
+        Route::get('/composer', [JourneyController::class, 'composer']);
+
+
         Route::controller(ModelsController::class)->group(function () {
             Route::get('/models', 'create')->name('models.create');
             Route::post('/models', 'store')->name('models.store');
@@ -53,14 +56,4 @@ Route::prefix('catapult')
             Route::post('/controller/{controller}/route/{route}/destroy', 'destroy')->name('routes.destroy');
         });
 
-
-        /** TEST METHODS */
-        Route::get('/journey', [JourneyController::class, 'index'])->name('journey.index');
-        Route::get('/create-file', [JourneyController::class, 'createFile'])->name('create-file');
-
-        Route::get('/generate', [JourneyController::class, 'generate'])->name('generate');
-        Route::get('/generate/success', [JourneyController::class, 'successfullyGenerated'])->name('generate.success');
-
-        Route::get('/test', function () {
-        });
     });
