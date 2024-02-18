@@ -23,6 +23,7 @@ class JourneyController extends BaseController
         $packagesKeys = array_keys($packages);
         $postInstallCommands = [];
 
+
         $files = new Filesystem();
         $workingPath = base_path();
 
@@ -32,14 +33,14 @@ class JourneyController extends BaseController
 
         foreach ($packagesKeys as $package) {
             $currentPackage = $availablePackages[$package];
-
             $dependencyKey = $currentPackage['dev'] ? 'require-dev' : 'require';
-            $composerJson[$dependencyKey][$currentPackage['composer_require']] = $currentPackage['version'] ?? '*';
 
-            $composerJson[$dependencyKey] = array_unique($composerJson[$dependencyKey]);
+            if (!isset($composerJson[$dependencyKey][$currentPackage['composer_require']])) {
+                $composerJson[$dependencyKey][$currentPackage['composer_require']] = $currentPackage['version'] ?? '*';
 
-            $postInstallCommands = array_merge($postInstallCommands, $availablePackages[$package]['post_install']);
-            CatapultPackage::create(['package_key' => $package]);
+                $postInstallCommands = array_merge($postInstallCommands, $availablePackages[$package]['post_install']);
+                CatapultPackage::create(['package_key' => $package]);
+            }
         }
 
         //add the post install command for each package
