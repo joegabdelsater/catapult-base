@@ -29,7 +29,7 @@ class RelationshipsController extends BaseController
         foreach($supportedRelationships as $key => $relationship){
             $existing[$key] = CatapultRelationship::where([
                 'relationship' => $key,
-                'model_id' => $modelId
+                'catapult_model_id' => $modelId
             ])->get();
         }
 

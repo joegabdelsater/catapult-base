@@ -70,7 +70,7 @@ class MigrationsController extends BaseController
             if ($relationship->relationship_method  === 'belongsTo') {
                 if (!$foreignModelName) {
                     $foreignModelName = str_replace('::class', '', $relationship->relationship_model);
-                    $foreignModelName = lcfirst(Str::singular($foreignModelName)) . '_id';
+                    $foreignModelName = strtolower(Str::snake(Str::singular($foreignModelName))) . '_id';
                 }
 
                 $foreignKeys[] = "\$table->foreignId('$foreignModelName')->onDelete('cascade');";
@@ -105,7 +105,7 @@ class MigrationsController extends BaseController
              */
             public function down(): void
             {
-                Schema::dropIfExists('relationships');
+                Schema::dropIfExists('{$model->table_name}');
             }
         };
         

@@ -39,6 +39,7 @@ class JourneyController extends BaseController
                 $composerJson[$dependencyKey][$currentPackage['composer_require']] = $currentPackage['version'] ?? '*';
 
                 $postInstallCommands = array_merge($postInstallCommands, $availablePackages[$package]['post_install']);
+
                 CatapultPackage::create(['package_key' => $package]);
             }
         }

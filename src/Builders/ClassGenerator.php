@@ -22,7 +22,8 @@ class ClassGenerator
     }
 
     public function generate()
-    {
+    {   
+
         file_put_contents($this->getFullPath(), $this->content);
         return $this;
     }

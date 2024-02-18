@@ -54,19 +54,20 @@ class ModelBuilder implements Builder
             $properties[] = 'protected $guarded = [\'id\'];';
         }
 
-
-        foreach ($this->model->packages as $package) {
-            $package = $packages[$package];
-            if (isset($package['model'])) {
-                $imports = array_merge($imports, $package['model']['imports']);
-                $traits = array_merge($traits, $package['model']['traits']);
-                $extends = array_merge($extends, $package['model']['extends']);
-                $implements = array_merge($implements, $package['model']['implements']);
-                $methods = array_merge($methods, $package['model']['methods']);
-                $properties = array_merge($properties, $package['model']['properties']);
+        if ($this->model->packages) {
+            foreach ($this->model->packages as $package) {
+                $package = $packages[$package];
+                if (isset($package['model'])) {
+                    $imports = array_merge($imports, $package['model']['imports']);
+                    $traits = array_merge($traits, $package['model']['traits']);
+                    $extends = array_merge($extends, $package['model']['extends']);
+                    $implements = array_merge($implements, $package['model']['implements']);
+                    $methods = array_merge($methods, $package['model']['methods']);
+                    $properties = array_merge($properties, $package['model']['properties']);
+                }
             }
         }
-
+        
         if (count($imports) > 0) {
             $importsCode = implode("\n", $imports);
         }
@@ -113,6 +114,7 @@ class ModelBuilder implements Builder
             }
 
             PHP;
+
 
         return $modelContent;
     }
