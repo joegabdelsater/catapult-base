@@ -29,8 +29,8 @@ class ControllerBuilder implements Builder
         $imports = array_unique($imports);
 
         return [
-            'imports' => implode('\n', $imports),
-            'methods' => implode('\n\n', $methods)
+            'imports' => implode("\n", $imports),
+            'methods' => implode("\n\n\t", $methods)
         ];
     }
 
