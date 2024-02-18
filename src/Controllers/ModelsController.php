@@ -47,7 +47,6 @@ class ModelsController extends BaseController
     public function store(Request $request)
     {   
 
-
         $valid = $request->validate([
             'name' => 'required|unique:catapult_models',
             'table_name' => 'nullable|unique:models,table_name',

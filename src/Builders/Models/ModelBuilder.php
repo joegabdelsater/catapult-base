@@ -14,7 +14,7 @@ class ModelBuilder implements Builder
         $this->model = $model;
     }
 
- 
+
     public function getRelationships(): string
     {
         foreach ($this->model->relationships as $relationship) {
@@ -28,22 +28,70 @@ class ModelBuilder implements Builder
 
     public function build(): string
     {
-        $modelName = $this->model->name;
+        $packages = config('packages');
         $imports = [
             'use Illuminate\Database\Eloquent\Model;',
             'use Illuminate\Database\Eloquent\Factories\HasFactory;',
         ];
 
-        $uses = [
+        $traits = [
             'use HasFactory;',
         ];
 
-        $importsCode = implode("\n", $imports);
-        $usesCode = implode("\n\t", $uses);
+        $extends = ['Model'];
+        $implements = [];
+        $methods = [];
+        $properties = [];
 
-        $extendsCode = 'Model';
+        $implementsCode = '';
+        $extendsCode = '';
+        $methodsCode = '';
+        $propertiesCode = '';
+        $importsCode = '';
+        $traitsCode = '';
 
-        $implements = '';
+        if ($this->model->only_guard_id) {
+            $properties[] = 'protected $guarded = [\'id\'];';
+        }
+
+
+        foreach ($this->model->packages as $package) {
+            $package = $packages[$package];
+            if (isset($package['model'])) {
+                $imports = array_merge($imports, $package['model']['imports']);
+                $traits = array_merge($traits, $package['model']['traits']);
+                $extends = array_merge($extends, $package['model']['extends']);
+                $implements = array_merge($implements, $package['model']['implements']);
+                $methods = array_merge($methods, $package['model']['methods']);
+                $properties = array_merge($properties, $package['model']['properties']);
+            }
+        }
+
+        if (count($imports) > 0) {
+            $importsCode = implode("\n", $imports);
+        }
+
+        if (count($traits) > 0) {
+            $traitsCode = implode("\n\t", $traits);
+        }
+
+        if (count($extends) > 0) {
+            $extendsCode .= " extends $extends[0]";
+        }
+
+        if (count($implements) > 0) {
+            $implementsCode = implode(", ", $implements);
+            $implementsCode .= " implements $implementsCode";
+        }
+
+        if (count($properties) > 0) {
+            $propertiesCode = implode("\n\t", $properties);
+        }
+
+        if (count($methods) > 0) {
+            $methodsCode = implode("\n\t", $methods);
+        }
+
 
         $modelContent = <<<PHP
             <?php
@@ -51,12 +99,16 @@ class ModelBuilder implements Builder
 
             $importsCode
 
-            class {$this->model->name} extends Model
+            class {$this->model->name} $extendsCode $implementsCode
             {   
-                $usesCode
+                $traitsCode
 
-                protected \$fillable = ['name', 'description', 'price'];
+                $propertiesCode
+
+                /** Pacakges Methods */
+                $methodsCode
                 
+                /**  Relationships */
                 {$this->getRelationships()}
             }
 

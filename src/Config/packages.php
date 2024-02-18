@@ -59,8 +59,8 @@ return [
                 'use Illuminate\Foundation\Auth\User as Authenticatable;'
             ],
             'traits' => [],
-            'extends' => ['Authenticatable'], 
-            'implements' => ['FilamentUser'],
+            'extends' => [], 
+            'implements' => [],
             'methods' => ['public function canAccessPanel(Panel $panel): bool
             {
                 return str_ends_with($this->email, "@yourdomain.com") && $this->hasVerifiedEmail();
