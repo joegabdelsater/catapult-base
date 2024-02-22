@@ -7,7 +7,7 @@
             <p class="mb-2"> The package(s) have been added to your composer.json file.</p>
             <p class="mb-2"> You can now run <code class="bg-gray-700 text-white px-2 py-1">composer update</code> to install the newly added package(s).</p>
 
-            <p>When package installation is complete, run <code class="bg-gray-700 text-white px-2 py-1">php artisan catapult:packages-setup</code> to setup all your packages:</p>
+            <p>When package installation is complete, run <code class="bg-gray-700 text-white px-2 py-1">php artisan catapult:setup-packages</code> to setup all your packages:</p>
       
 
             <div class="mt-8">
