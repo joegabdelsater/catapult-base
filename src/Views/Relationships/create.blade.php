@@ -11,7 +11,7 @@
                 @csrf
                 <div class=" mb-16 border-2 border-dashed p-8 rounded-md">
                     <div class="mb-4  flex flex-row justify-between items-center">
-                        <p class="text-gray-700 font-bold">{{ $model->name }}.php</p>
+                        <p class="text-gray-700 font-bold text-lg">It's easier for you to define all the relationships, then hit save (or enter) after you're done</p>
 
                         <div class="flex flex-row items-center">
                             <button type="submit" form="create-model-relationship"
@@ -53,12 +53,22 @@
         </div>
 
         <div class="relative">
+
             <div class="fixed top-20">
-                <h1 class="text-2xl font-bold mb-4">Models</h1>
+                <div class="mb-8">
+                    <p class="text-2xl font-bold mb-1">You are in the</br>
+                    <div class="bg-gray-700 px-2 py-1 text-center">
+                        <span class="text-2xl font-bold text-white ">{{ $model->name }}</span>
+                        <span class="text-2xl font-bold text-sky-300">::class</span>
+                    </div>
+                    </p>
+                </div>
+                <h1 class="text-2xl font-bold mb-4">Available Models</h1>
                 @if (count($models) === 0)
                     <div class="text-gray-700">Seems like you haven't created anything yet.</div>
                 @endif
                 <div class="">
+
                     @foreach ($models as $model)
                         <div class="flex justify-between items-center p-3">
                             <div class="text-gray-700 px-4 py-2 bg-sky-200 rounded-md font-bold cursor-pointer"

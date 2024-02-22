@@ -18,7 +18,8 @@ function getMethodNameInput(data) {
 }
 
 function getMethodName(relationship, modelNames) {
-    return relationship === 'one_to_many' ? `${modelNames.plural}` : `${modelNames.single}`;
+    const pluralMethodNameRelationships = ['one_to_many', 'many_to_many'];
+    return pluralMethodNameRelationships.includes(relationship) ? `${modelNames.plural}` : `${modelNames.single}`;
 }
 
 function getMethodBlock(data) {
