@@ -3,6 +3,7 @@
 - Only use catapult on a fresh project. Otherwise it will overwrite your existing models, controllers, migrations and validation requests.
 
 
+
 # Requirements
 This package supports Laravel version 10.
 
@@ -40,6 +41,8 @@ You can then navigate to the ```/catapult``` url to access the catapult dashboar
 - When done, you can either generate the model files now, or wait to setup the relationships, and then generate the models.
 - If you generate the models, then change something in your relationships, an alert will show next to the models so you know you need to regenerate them.
 
+
+
 ### Setup the relationships:
 - Choose the model you want to create relationships for.
 - Drag and drop the models from the models list on the right inside the type of relationship you wish to have.
@@ -47,11 +50,14 @@ You can then navigate to the ```/catapult``` url to access the catapult dashboar
 - Hit save to save the relationships to the database. At this point, they are not yet generated.
 - Once done, go back to the models section, and regenerate your models for the changes to apply
 
+
+
 ### Creating the migrations and validation requests:
 - Select the model you wish to generate a migration for.
 - The class shown in the editor uses ```CatapultSchema``` instead of the regular ```Schema``` class. DO NOT MODIFY IT.
 - Write the migration code you normally write in your laravel migrations.
 - if you wish to create validation on a specific field, chain the `->validation('')` method to your code.
+  
 
 ```
   $table->string('first_name')->nullable()->validation('nullable|max:255');
@@ -81,9 +87,13 @@ You can then navigate to the ```/catapult``` url to access the catapult dashboar
 - Sometimes you might save migrations in the wrong order before generating, that's okay. Catapult will show you a warning on the migration before you generate it in case you should generate another migration before it.
 
 
+
+
 - ### Create the controllers.
 - This should be straight forward. Just create the controllers by writing their names and hitting save.
 - Click on generate to create the files.
+
+
 
   ### Setup the controller routes
 - Select type of route on controller you wish to create routes for (Web or API). 
