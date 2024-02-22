@@ -77,11 +77,11 @@ You can then navigate to the ```/catapult``` url to access the catapult dashboar
 
  /** CORRECT */
   $table->unsignedBigInteger('user_id')->validation('required|exists:users,id'); 
-  $table->foreign('user_id')->refenrences('users')->on('id')->onDelete('cascade');
+  $table->foreign('user_id')->references('users')->on('id')->onDelete('cascade');
 
   /** WRONG */
   $table->unsignedBigInteger('user_id'); 
-  $table->foreign('user_id')->validation('required|exists:users,id')->refenrences('users')->on('id')->onDelete('cascade');
+  $table->foreign('user_id')->validation('required|exists:users,id')->references('users')->on('id')->onDelete('cascade');
 
   
 ```
