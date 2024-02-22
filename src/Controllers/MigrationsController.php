@@ -155,6 +155,10 @@ class MigrationsController extends BaseController
             mkdir(config('directories.temp_migrations'));
         }
 
+        if(!is_dir(config('directories.validation_requests'))){
+            mkdir(config('directories.validation_requests'));
+        }
+
         $model = CatapultModel::with('migration')->find($model->id);
         /** Create the temp migration */
         $migrationBuilder = new MigrationBuilder($model->migration);
