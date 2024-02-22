@@ -9,6 +9,10 @@ class RouteService
 {
     public static function generate()
     {
+        if(!is_dir(config('directories.catapult_routes'))){
+            mkdir(config('directories.catapult_routes'), 0755, true);
+        }
+        
         $builder = new RouteBuilder();
         $code = $builder->build();
 

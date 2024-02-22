@@ -150,8 +150,12 @@ class MigrationsController extends BaseController
 
     public function generate(CatapultModel $model)
     {
-        $model = CatapultModel::with('migration')->find($model->id);
 
+        if(!is_dir(config('directories.temp_migrations'))){
+            mkdir(config('directories.temp_migrations'));
+        }
+
+        $model = CatapultModel::with('migration')->find($model->id);
         /** Create the temp migration */
         $migrationBuilder = new MigrationBuilder($model->migration);
         $migrationGenerator = new ClassGenerator(filePath: config('directories.temp_migrations'), fileName: 'create_' . $model->table_name . '_table.php', content: $migrationBuilder->build());
