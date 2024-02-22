@@ -14,7 +14,7 @@
             <p class="text-sm font-bold"><span class="text-sky-500">return
                 </span><span class="text-orange-600">$this->{{ $current->relationship_method }}</span>
                 <span>(</span>
-                @if ($current->relationship !== 'ploymorphic_morph_to')
+                @if ($current->relationship !== 'polymorphic_morph_to')
                     {{ str_replace('::class', '', $current->relationship_model) }}<span
                         class="text-sky-500">::class</span>
             </p>

@@ -19,7 +19,7 @@ class RelationshipBuilder implements Builder
     {   
         $methodParameters = '';
 
-        if($this->relationship->relationship !== 'ploymorphic_morph_to') {
+        if($this->relationship->relationship !== 'polymorphic_morph_to') {
             $methodParameters = $this->relationship->relationship_model . $this->generateKeys();
         }
 

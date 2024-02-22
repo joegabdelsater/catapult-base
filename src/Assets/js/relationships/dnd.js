@@ -18,7 +18,7 @@ function getMethodNameInput(data) {
 }
 
 function getMethodName(relationship, modelNames) {
-    if(relationship === 'ploymorphic_morph_to') return `${modelNames.single}able`;
+    if(relationship === 'polymorphic_morph_to') return `${modelNames.single}able`;
     const pluralMethodNameRelationships = ['one_to_many', 'many_to_many'];
     return pluralMethodNameRelationships.includes(relationship) ? `${modelNames.plural}` : `${modelNames.single}`;
 }
@@ -29,9 +29,9 @@ function getMethodBlock(data) {
 
     var parameters = ' ';
 
-    if (relationship !== 'ploymorphic_morph_to') {
+    if (relationship !== 'polymorphic_morph_to') {
         parameters = `${originModel.replace('::class', '')}<span class="text-sky-500">::class</span> </p>
-        ${getMethodRelationshipInputs(relationship, key)}`;
+        ${getMethodRelationshipInputs(relationship, key, data)}`;
     }
 
     return `<div class="p-4">
@@ -55,11 +55,15 @@ function getMethodBlock(data) {
 <div class="delete-btn bg-orange-600 rounded-r-md flex items-center justify-center h-full w-full cursor-pointer">${deleteComponent}</div>`;
 }
 
-function getMethodRelationshipInputs(relationship, key) {
+function getMethodRelationshipInputs(relationship, key, data) {
     var inputs = ``;
 
     relationshipMethodInputs[relationship].forEach(input => {
-        inputs += `<span>,</span><input type="text" class="focused block mx-1 font-bold px-2 w-40 text-sm text-white rounded bg-gray-700  border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer w-40" placeholder="${input}" name="r[${key}][${input}]"/>`
+        if(relationship === 'polymorphic_morph_one' || relationship === 'polymorphic_morph_many') {
+            inputs += `<span>,</span><input type="text" class="focused block mx-1 font-bold px-2 w-40 text-sm text-white rounded bg-gray-700  border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer w-40" placeholder="${input}" name="r[${key}][${input}]" value="${data.originModelNames.single}able"/>`
+        } else {
+            inputs += `<span>,</span><input type="text" class="focused block mx-1 font-bold px-2 w-40 text-sm text-white rounded bg-gray-700  border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer w-40" placeholder="${input}" name="r[${key}][${input}]"/>`
+        }     
     });
 
     return inputs;
