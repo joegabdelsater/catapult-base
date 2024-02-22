@@ -13,7 +13,7 @@ This package supports Laravel version 10.
 To install the package:
 
 ```
-composer require --dev joegabdelsater/catapult-base
+composer require --dev joeabdelsater/catapult-base
 ```
 
 Then pusblish the javascript assets:
