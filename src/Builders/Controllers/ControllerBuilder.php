@@ -1,9 +1,9 @@
 <?php
 
-namespace Joegabdelsater\CatapultBase\Builders\Controllers;
+namespace Joeabdelsater\CatapultBase\Builders\Controllers;
 
-use Joegabdelsater\CatapultBase\Interfaces\Builder;
-use Joegabdelsater\CatapultBase\Models\CatapultModel;
+use Joeabdelsater\CatapultBase\Interfaces\Builder;
+use Joeabdelsater\CatapultBase\Models\CatapultModel;
 
 class ControllerBuilder implements Builder
 {
@@ -61,7 +61,7 @@ class ControllerBuilder implements Builder
         $returnCode = $route->route_type == 'api' ? "response()->json([])" : "view('{$route->controller_method}')";
         $code = <<<PHP
         public function $route->controller_method($parametersCode) {
-                return $returnCode; 
+                return $returnCode;
             }
         PHP;
 
@@ -83,10 +83,10 @@ class ControllerBuilder implements Builder
         $code =  <<<PHP
         <?php
         namespace App\Http\Controllers;
-        
+
         $imports
         use Illuminate\Http\Request;
-        
+
         class {$this->controller->name} extends Controller
         {
             $methodsCode

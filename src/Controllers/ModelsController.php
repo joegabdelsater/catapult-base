@@ -1,23 +1,23 @@
 <?php
 
-namespace Joegabdelsater\CatapultBase\Controllers;
+namespace Joeabdelsater\CatapultBase\Controllers;
 
 use Illuminate\Routing\Controller as BaseController;
 use Illuminate\Http\Request;
-use Joegabdelsater\CatapultBase\Models\CatapultModel;
+use Joeabdelsater\CatapultBase\Models\CatapultModel;
 use Illuminate\Support\Str;
-use Joegabdelsater\CatapultBase\Classes\ModelService;
-use Joegabdelsater\CatapultBase\Models\CatapultPackage;
+use Joeabdelsater\CatapultBase\Classes\ModelService;
+use Joeabdelsater\CatapultBase\Models\CatapultPackage;
 
 class ModelsController extends BaseController
 {
     public function create()
-    {   
+    {
         $availablePackages = config('packages');
         $packages = CatapultPackage::all()->pluck('package_key');
         $currentPackages = [];
 
-        foreach($packages as $package) {
+        foreach ($packages as $package) {
             $currentPackages[$package] = $availablePackages[$package];
         }
 
@@ -34,7 +34,8 @@ class ModelsController extends BaseController
         return redirect()->back();
     }
 
-    public function generateAll() {
+    public function generateAll()
+    {
         $models = CatapultModel::with('relationships')->get();
 
         foreach ($models as $model) {
@@ -45,7 +46,7 @@ class ModelsController extends BaseController
     }
 
     public function store(Request $request)
-    {   
+    {
 
         $valid = $request->validate([
             'name' => 'required|unique:catapult_models',

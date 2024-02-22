@@ -1,13 +1,13 @@
 <?php
 
-namespace Joegabdelsater\CatapultBase\Controllers;
+namespace Joeabdelsater\CatapultBase\Controllers;
 
 
 use Illuminate\Routing\Controller as BaseController;
 use Illuminate\Http\Request;
-use Joegabdelsater\CatapultBase\Models\Route;
-use Joegabdelsater\CatapultBase\Models\CatapultController;
-use Joegabdelsater\CatapultBase\Classes\RouteService;
+use Joeabdelsater\CatapultBase\Models\Route;
+use Joeabdelsater\CatapultBase\Models\CatapultController;
+use Joeabdelsater\CatapultBase\Classes\RouteService;
 
 class RoutesController extends BaseController
 {
@@ -66,12 +66,10 @@ class RoutesController extends BaseController
 
     public function generateAll()
     {
-       RouteService::generate();
+        RouteService::generate();
 
         CatapultController::whereHas('routes')->update(['updated' => true]);
 
         return redirect()->back();
     }
-
-   
 }

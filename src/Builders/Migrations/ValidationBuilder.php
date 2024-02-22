@@ -1,9 +1,9 @@
 <?php
 
-namespace Joegabdelsater\CatapultBase\Builders\Migrations;
+namespace Joeabdelsater\CatapultBase\Builders\Migrations;
 
-use Joegabdelsater\CatapultBase\Interfaces\Builder;
-use Joegabdelsater\CatapultBase\Models\CatapultMigration;
+use Joeabdelsater\CatapultBase\Interfaces\Builder;
+use Joeabdelsater\CatapultBase\Models\CatapultMigration;
 
 class ValidationBuilder implements Builder
 {
@@ -24,7 +24,7 @@ class ValidationBuilder implements Builder
         $rules = $this->migrationClass->up();
         $validationRules = [];
 
-        foreach($rules as $key => $value) {
+        foreach ($rules as $key => $value) {
             $validationRules[] = "'$key' => '$value'";
         }
 
@@ -35,7 +35,7 @@ class ValidationBuilder implements Builder
             namespace App\Http\Requests;
 
             use Illuminate\Foundation\Http\FormRequest;
-            
+
             class {$this->modelName}Request extends FormRequest
             {
                 /**
@@ -45,7 +45,7 @@ class ValidationBuilder implements Builder
                 {
                     return false;
                 }
-            
+
                 /**
                  * Get the validation rules that apply to the request.
                  *
@@ -58,7 +58,7 @@ class ValidationBuilder implements Builder
                     ];
                 }
             }
-            
+
 
             PHP;
     }

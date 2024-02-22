@@ -1,6 +1,6 @@
 <?php
 
-namespace Joegabdelsater\CatapultBase\Models;
+namespace Joeabdelsater\CatapultBase\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model as BaseModel;

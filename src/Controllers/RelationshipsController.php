@@ -1,18 +1,18 @@
 <?php
 
-namespace Joegabdelsater\CatapultBase\Controllers;
+namespace Joeabdelsater\CatapultBase\Controllers;
 
 
 use Illuminate\Routing\Controller as BaseController;
 use Illuminate\Http\Request;
-use Joegabdelsater\CatapultBase\Models\CatapultModel;
-use Joegabdelsater\CatapultBase\Models\CatapultRelationship;
+use Joeabdelsater\CatapultBase\Models\CatapultModel;
+use Joeabdelsater\CatapultBase\Models\CatapultRelationship;
 
 class RelationshipsController extends BaseController
 {
 
     public function index()
-    {   
+    {
         $models = CatapultModel::with('relationships')->get();
         return view('catapult::relationships.index', compact('models'));
     }
@@ -26,7 +26,7 @@ class RelationshipsController extends BaseController
 
         $exitsting = [];
 
-        foreach($supportedRelationships as $key => $relationship){
+        foreach ($supportedRelationships as $key => $relationship) {
             $existing[$key] = CatapultRelationship::where([
                 'relationship' => $key,
                 'catapult_model_id' => $modelId
@@ -68,12 +68,12 @@ class RelationshipsController extends BaseController
         return redirect()->route('catapult.relationships.index');
     }
 
-    public function destroy( $modelId, $relationshipId)
-    {       
+    public function destroy($modelId, $relationshipId)
+    {
 
         $model = CatapultModel::find($modelId);
-        $model->updated = true; 
-        
+        $model->updated = true;
+
         $model->save();
 
         CatapultRelationship::destroy($relationshipId);

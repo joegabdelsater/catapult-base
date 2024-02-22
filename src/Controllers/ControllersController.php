@@ -1,11 +1,11 @@
 <?php
 
-namespace Joegabdelsater\CatapultBase\Controllers;
+namespace Joeabdelsater\CatapultBase\Controllers;
 
 use Illuminate\Routing\Controller as BaseController;
 use Illuminate\Http\Request;
-use Joegabdelsater\CatapultBase\Models\CatapultController;
-use Joegabdelsater\CatapultBase\Classes\ControllerService;
+use Joeabdelsater\CatapultBase\Models\CatapultController;
+use Joeabdelsater\CatapultBase\Classes\ControllerService;
 
 class ControllersController extends BaseController
 {
@@ -41,7 +41,7 @@ class ControllersController extends BaseController
     }
 
     public function generateAll()
-    {   
+    {
         $controllers = CatapultController::all();
         foreach ($controllers as $controller) {
             ControllerService::generate($controller);

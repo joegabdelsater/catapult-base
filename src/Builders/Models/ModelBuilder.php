@@ -1,8 +1,8 @@
 <?php
 
-namespace Joegabdelsater\CatapultBase\Builders\Models;
+namespace Joeabdelsater\CatapultBase\Builders\Models;
 
-use Joegabdelsater\CatapultBase\Interfaces\Builder;
+use Joeabdelsater\CatapultBase\Interfaces\Builder;
 
 class ModelBuilder implements Builder
 {
@@ -67,7 +67,7 @@ class ModelBuilder implements Builder
                 }
             }
         }
-        
+
         if (count($imports) > 0) {
             $importsCode = implode("\n", $imports);
         }
@@ -101,14 +101,14 @@ class ModelBuilder implements Builder
             $importsCode
 
             class {$this->model->name} $extendsCode $implementsCode
-            {   
+            {
                 $traitsCode
 
                 $propertiesCode
 
                 /** Pacakges Methods */
                 $methodsCode
-                
+
                 /**  Relationships */
                 {$this->getRelationships()}
             }

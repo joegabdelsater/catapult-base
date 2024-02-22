@@ -1,12 +1,12 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use Joegabdelsater\CatapultBase\Controllers\JourneyController;
-use Joegabdelsater\CatapultBase\Controllers\MigrationsController;
-use Joegabdelsater\CatapultBase\Controllers\ModelsController;
-use Joegabdelsater\CatapultBase\Controllers\RelationshipsController;
-use Joegabdelsater\CatapultBase\Controllers\ControllersController;
-use Joegabdelsater\CatapultBase\Controllers\RoutesController;
+use Joeabdelsater\CatapultBase\Controllers\JourneyController;
+use Joeabdelsater\CatapultBase\Controllers\MigrationsController;
+use Joeabdelsater\CatapultBase\Controllers\ModelsController;
+use Joeabdelsater\CatapultBase\Controllers\RelationshipsController;
+use Joeabdelsater\CatapultBase\Controllers\ControllersController;
+use Joeabdelsater\CatapultBase\Controllers\RoutesController;
 
 Route::prefix('catapult')
     ->as('catapult.')
@@ -54,5 +54,4 @@ Route::prefix('catapult')
             Route::get('/routes/generate', 'generateAll')->name('routes.generate-all');
             Route::post('/controller/{controller}/route/{route}/destroy', 'destroy')->name('routes.destroy');
         });
-
     });

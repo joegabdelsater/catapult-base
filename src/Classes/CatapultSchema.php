@@ -1,22 +1,25 @@
 <?php
-namespace Joegabdelsater\CatapultBase\Classes;
+
+namespace Joeabdelsater\CatapultBase\Classes;
+
 use Illuminate\Database\Schema\Blueprint;
 
-class CatapultSchema {
-     public static function create($tableName, $callback) {
-         $table = new Blueprint($tableName);
-         $callback($table);
- 
-         $validationRules = [];
+class CatapultSchema
+{
+    public static function create($tableName, $callback)
+    {
+        $table = new Blueprint($tableName);
+        $callback($table);
 
-         foreach($table->getColumns() as $column) {
+        $validationRules = [];
 
-             if ($column->validation) {
-                 $validationRules[$column->name] = $column->validation;
-             }
-         }
- 
+        foreach ($table->getColumns() as $column) {
+
+            if ($column->validation) {
+                $validationRules[$column->name] = $column->validation;
+            }
+        }
+
         return $validationRules;
-     }
- }
- 
+    }
+}

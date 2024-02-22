@@ -1,4 +1,5 @@
 {
+    "license": "proprietary",
     "name": "joeabdelsater/catapult-base",
     "description": "The purpose of this package is to accelerate the laravel development process allowing developers to setup their projects faster and accomplish more, in less time",
     "autoload": {
@@ -9,7 +10,7 @@
     "authors": [
         {
             "name": "Joe Abdel Sater",
-            "email": "joegabdelsater@gmail.com"
+            "email": "Joeabdelsater@gmail.com"
         }
     ],
     "extra": {

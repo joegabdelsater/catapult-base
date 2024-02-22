@@ -1,9 +1,9 @@
 <?php
 
-namespace Joegabdelsater\CatapultBase\Builders\Models;
+namespace Joeabdelsater\CatapultBase\Builders\Models;
 
-use Joegabdelsater\CatapultBase\Models\CatapultRelationship;
-use Joegabdelsater\CatapultBase\Interfaces\Builder;
+use Joeabdelsater\CatapultBase\Models\CatapultRelationship;
+use Joeabdelsater\CatapultBase\Interfaces\Builder;
 
 class RelationshipBuilder implements Builder
 {
@@ -16,10 +16,10 @@ class RelationshipBuilder implements Builder
 
 
     public function build(): string
-    {   
+    {
         $methodParameters = '';
 
-        if($this->relationship->relationship !== 'polymorphic_morph_to') {
+        if ($this->relationship->relationship !== 'polymorphic_morph_to') {
             $methodParameters = $this->relationship->relationship_model . $this->generateKeys();
         }
 
@@ -27,7 +27,7 @@ class RelationshipBuilder implements Builder
                 public function {$this->relationship->relationship_method_name}() {
                     return \$this->{$this->relationship->relationship_method}($methodParameters);
                 }
-    
+
             PHP;
     }
 

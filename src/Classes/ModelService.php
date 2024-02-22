@@ -1,9 +1,9 @@
 <?php
 
-namespace Joegabdelsater\CatapultBase\Classes;
+namespace Joeabdelsater\CatapultBase\Classes;
 
-use Joegabdelsater\CatapultBase\Builders\ClassGenerator;
-use Joegabdelsater\CatapultBase\Builders\Models\ModelBuilder;
+use Joeabdelsater\CatapultBase\Builders\ClassGenerator;
+use Joeabdelsater\CatapultBase\Builders\Models\ModelBuilder;
 
 class ModelService
 {

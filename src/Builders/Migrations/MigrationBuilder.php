@@ -1,9 +1,10 @@
 <?php
 
-namespace Joegabdelsater\CatapultBase\Builders\Migrations;
+namespace Joeabdelsater\CatapultBase\Builders\Migrations;
 
-use Joegabdelsater\CatapultBase\Interfaces\Builder;
-use Joegabdelsater\CatapultBase\Models\CatapultMigration;
+use Joeabdelsater\CatapultBase\Interfaces\Builder;
+use Joeabdelsater\CatapultBase\Models\CatapultMigration;
+
 class MigrationBuilder implements Builder
 {
     public $migration;

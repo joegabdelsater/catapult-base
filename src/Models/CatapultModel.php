@@ -1,6 +1,6 @@
 <?php
 
-namespace Joegabdelsater\CatapultBase\Models;
+namespace Joeabdelsater\CatapultBase\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -12,7 +12,7 @@ class CatapultModel extends Model
     protected $casts = [
         'packages' => 'array'
     ];
-    
+
     protected $table = 'catapult_models';
     public function relationships()
     {

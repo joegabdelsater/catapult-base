@@ -1,14 +1,14 @@
 <?php
 
-namespace Joegabdelsater\CatapultBase\Controllers;
+namespace Joeabdelsater\CatapultBase\Controllers;
 
 use Illuminate\Routing\Controller as BaseController;
 use Illuminate\Http\Request;
-use Joegabdelsater\CatapultBase\Models\CatapultModel;
-use Joegabdelsater\CatapultBase\Models\CatapultMigration;
-use Joegabdelsater\CatapultBase\Builders\Migrations\MigrationBuilder;
-use Joegabdelsater\CatapultBase\Builders\Migrations\ValidationBuilder;
-use Joegabdelsater\CatapultBase\Builders\ClassGenerator;
+use Joeabdelsater\CatapultBase\Models\CatapultModel;
+use Joeabdelsater\CatapultBase\Models\CatapultMigration;
+use Joeabdelsater\CatapultBase\Builders\Migrations\MigrationBuilder;
+use Joeabdelsater\CatapultBase\Builders\Migrations\ValidationBuilder;
+use Joeabdelsater\CatapultBase\Builders\ClassGenerator;
 use Illuminate\Support\Str;
 
 class MigrationsController extends BaseController
@@ -28,11 +28,11 @@ class MigrationsController extends BaseController
             if (count($belongsToRelationships) > 0) {
                 $belongsTo = $belongsToRelationships->filter(function ($relationship) {
                     $model = CatapultModel::where('name', str_replace('::class', '', $relationship->relationship_model))->first();
-                    if($model->migration) {
+                    if ($model->migration) {
                         return !$model->migration->created;
                     } else {
                         return true;
-                    }   
+                    }
                 });
 
 
@@ -83,8 +83,8 @@ class MigrationsController extends BaseController
             "<?php
         use Illuminate\Database\Migrations\Migration;
         use Illuminate\Database\Schema\Blueprint;
-        use Illuminate\Support\Facades\Schema; 
-        use Joegabdelsater\CatapultBase\Classes\CatapultSchema;
+        use Illuminate\Support\Facades\Schema;
+        use Joeabdelsater\CatapultBase\Classes\CatapultSchema;
 
     return new class extends Migration
         {
@@ -99,7 +99,7 @@ class MigrationsController extends BaseController
                     \$table->timestamps();
                 });
             }
-        
+
             /**
              * Reverse the migrations.
              */
@@ -108,8 +108,8 @@ class MigrationsController extends BaseController
                 Schema::dropIfExists('{$model->table_name}');
             }
         };
-        
-        
+
+
 
         ";
 
@@ -165,7 +165,7 @@ class MigrationsController extends BaseController
 
         /** Modify the content of the temp migration */
         $migrationGenerator->modifyContent(stringModifications: [
-            'use Joegabdelsater\CatapultBase\Classes\CatapultSchema;' => '',
+            'use Joeabdelsater\CatapultBase\Classes\CatapultSchema;' => '',
             'return CatapultSchema' => 'Schema'
         ], regexModifications: [
             "/->validation\(['\"](.*?)['\"]\)/" => ''

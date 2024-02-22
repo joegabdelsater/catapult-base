@@ -78,6 +78,5 @@
         var csrfToken = '{{ csrf_token() }}';
     </script>
 
-    <script src="{{ asset('joegabdelsater/catapult-base/js/relationships/main.js') }}"></script>
-
+    <script src="{{ asset('Joeabdelsater/catapult-base/js/relationships/main.js') }}"></script>
 @endpush

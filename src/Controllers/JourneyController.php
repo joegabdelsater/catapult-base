@@ -1,12 +1,12 @@
 <?php
 
-namespace Joegabdelsater\CatapultBase\Controllers;
+namespace Joeabdelsater\CatapultBase\Controllers;
 
 use Illuminate\Routing\Controller as BaseController;
 use Illuminate\Support\Composer;
 use Illuminate\Filesystem\Filesystem;
 use Illuminate\Http\Request;
-use Joegabdelsater\CatapultBase\Models\CatapultPackage;
+use Joeabdelsater\CatapultBase\Models\CatapultPackage;
 
 class JourneyController extends BaseController
 {

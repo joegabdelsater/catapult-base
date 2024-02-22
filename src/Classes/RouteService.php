@@ -1,9 +1,9 @@
 <?php
 
-namespace Joegabdelsater\CatapultBase\Classes;
+namespace Joeabdelsater\CatapultBase\Classes;
 
-use Joegabdelsater\CatapultBase\Builders\ClassGenerator;
-use Joegabdelsater\CatapultBase\Builders\Routes\RouteBuilder;
+use Joeabdelsater\CatapultBase\Builders\ClassGenerator;
+use Joeabdelsater\CatapultBase\Builders\Routes\RouteBuilder;
 
 class RouteService
 {
@@ -26,10 +26,9 @@ class RouteService
             filePath: config('directories.catapult_routes'),
             fileName: 'web.php',
             content: $code['web']
-        
+
         );
         $webRoutesGenerator->generate()
             ->appendToFile(config('directories.web_routes_file'), "\n\n require __DIR__ . '/catapult/web.php';");
-
     }
 }

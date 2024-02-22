@@ -11,7 +11,8 @@
                 @csrf
                 <div class=" mb-16 border-2 border-dashed p-8 rounded-md">
                     <div class="mb-4  flex flex-row justify-between items-center">
-                        <p class="text-gray-700 font-bold text-lg">It's easier for you to define all the relationships, then hit save (or enter) after you're done</p>
+                        <p class="text-gray-700 font-bold text-lg">It's easier for you to define all the relationships, then
+                            hit save (or enter) after you're done</p>
 
                         <div class="flex flex-row items-center">
                             <button type="submit" form="create-model-relationship"
@@ -91,7 +92,7 @@
         var csrfToken = '{{ csrf_token() }}';
     </script>
 
-    <script src="{{ asset('joegabdelsater/catapult-base/js/relationships/main.js') }}"></script>
+    <script src="{{ asset('Joeabdelsater/catapult-base/js/relationships/main.js') }}"></script>
 
-    <script src="{{ asset('joegabdelsater/catapult-base/js/relationships/dnd.js') }}"></script>
+    <script src="{{ asset('Joeabdelsater/catapult-base/js/relationships/dnd.js') }}"></script>
 @endpush

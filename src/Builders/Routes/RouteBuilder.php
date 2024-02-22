@@ -1,9 +1,9 @@
 <?php
 
-namespace Joegabdelsater\CatapultBase\Builders\Routes;
+namespace Joeabdelsater\CatapultBase\Builders\Routes;
 
-use Joegabdelsater\CatapultBase\Interfaces\Builder;
-use Joegabdelsater\CatapultBase\Models\CatapultController;
+use Joeabdelsater\CatapultBase\Interfaces\Builder;
+use Joeabdelsater\CatapultBase\Models\CatapultController;
 
 class RouteBuilder implements Builder
 {
@@ -67,7 +67,7 @@ class RouteBuilder implements Builder
         $apiRoutesCode = <<<PHP
             <?php
             $apiRoutesImportsCode
-            
+
             $apiRoutesCode
             PHP;
 

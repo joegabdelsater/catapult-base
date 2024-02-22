@@ -1,6 +1,6 @@
 <?php
 
-namespace Joegabdelsater\CatapultBase\Console;
+namespace Joeabdelsater\CatapultBase\Console;
 
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Process;

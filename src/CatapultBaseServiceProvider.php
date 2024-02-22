@@ -1,13 +1,13 @@
 <?php
 
-namespace Joegabdelsater\CatapultBase;
+namespace Joeabdelsater\CatapultBase;
 
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\View;
-use Joegabdelsater\CatapultBase\Models\CatapultController;
-use Joegabdelsater\CatapultBase\Models\CatapultMigration;
-use Joegabdelsater\CatapultBase\Models\CatapultModel;
-use Joegabdelsater\CatapultBase\Console\SetupPackages;
+use Joeabdelsater\CatapultBase\Models\CatapultController;
+use Joeabdelsater\CatapultBase\Models\CatapultMigration;
+use Joeabdelsater\CatapultBase\Models\CatapultModel;
+use Joeabdelsater\CatapultBase\Console\SetupPackages;
 
 
 class CatapultBaseServiceProvider extends ServiceProvider
@@ -32,7 +32,7 @@ class CatapultBaseServiceProvider extends ServiceProvider
         }
 
         $this->publishes([
-            __DIR__ . '/../assets/js/' => public_path('joegabdelsater/catapult-base/js/'),
+            __DIR__ . '/../assets/js/' => public_path('Joeabdelsater/catapult-base/js/'),
         ], 'catapult-base');
 
         if (!app()->runningInConsole()) {
@@ -44,6 +44,6 @@ class CatapultBaseServiceProvider extends ServiceProvider
                 ]
             ]);
         }
-        
+
     }
 }

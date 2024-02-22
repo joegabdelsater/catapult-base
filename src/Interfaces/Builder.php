@@ -1,5 +1,6 @@
 <?php
-namespace Joegabdelsater\CatapultBase\Interfaces;
+
+namespace Joeabdelsater\CatapultBase\Interfaces;
 
 interface Builder
 {
