@@ -19,10 +19,12 @@ return new class extends Migration
             $table->string('relationship_method');
             $table->string('relationship');
             $table->string('foreign_key')->nullable();
+            $table->string('model_foreign_key')->nullable();
+            $table->string('related_model_foreign_key')->nullable();
+            $table->string('table')->nullable();
             $table->string('local_key')->nullable();
             $table->string('owner_key')->nullable();
             $table->string('model');
-
             $table->timestamps();
         });
     }

@@ -30,7 +30,10 @@ class RelationshipBuilder implements Builder
         $availableKeys = [
             'foreignKey' => $this->relationship->foreign_key,
             'localKey' => $this->relationship->local_key,
-            'ownerKey' => $this->relationship->owner_key
+            'ownerKey' => $this->relationship->owner_key,
+            'table' => $this->relationship->table,
+            'foreignPivotKey' => $this->relationship->model_foreign_key,
+            'relatedPivotKey' => $this->relationship->related_model_foreign_key,
         ];
 
         $keys = [];
