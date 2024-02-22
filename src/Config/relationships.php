@@ -17,7 +17,7 @@ return [
         'many_to_one' => ['foreign_key', 'owner_key'],
         'many_to_many' => ['table', 'model_foreign_key', 'related_model_foreign_key'],
         'ploymorphic_morph_to' => [],
-        'ploymorphic_morph_one' => ['name', 'type', 'id', 'local_key'],
-        'ploymorphic_morph_many' => ['name', 'type', 'id', 'local_key'],
+        'ploymorphic_morph_one' => ['polymorphic_relation'],
+        'ploymorphic_morph_many' => ['polymorphic_relation'],
     ],
 ];

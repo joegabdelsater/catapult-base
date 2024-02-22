@@ -16,10 +16,16 @@ class RelationshipBuilder implements Builder
 
 
     public function build(): string
-    {
+    {   
+        $methodParameters = '';
+
+        if($this->relationship->relationship !== 'ploymorphic_morph_to') {
+            $methodParameters = $this->relationship->relationship_model . $this->generateKeys();
+        }
+
         return  <<<PHP
                 public function {$this->relationship->relationship_method_name}() {
-                    return \$this->{$this->relationship->relationship_method}({$this->relationship->relationship_model}{$this->generateKeys()});
+                    return \$this->{$this->relationship->relationship_method}($methodParameters);
                 }
     
             PHP;
@@ -34,6 +40,7 @@ class RelationshipBuilder implements Builder
             'table' => $this->relationship->table,
             'foreignPivotKey' => $this->relationship->model_foreign_key,
             'relatedPivotKey' => $this->relationship->related_model_foreign_key,
+            'name' => $this->relationship->polymorphic_relation,
         ];
 
         $keys = [];

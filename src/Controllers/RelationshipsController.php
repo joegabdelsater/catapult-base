@@ -52,6 +52,7 @@ class RelationshipsController extends BaseController
         ]);
 
 
+
         foreach ($request->r as $relationship) {
             if (isset($relationship['id'])) {
                 $model->relationships()->find($relationship['id'])->update($relationship);

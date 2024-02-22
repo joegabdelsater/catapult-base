@@ -25,6 +25,7 @@ return new class extends Migration
             $table->string('local_key')->nullable();
             $table->string('owner_key')->nullable();
             $table->string('model');
+            $table->string('polymorphic_relation')->nullable();
             $table->timestamps();
         });
     }
