@@ -15,7 +15,7 @@
     "extra": {
         "laravel": {
             "providers": [
-                "Joeabdelsater\\CatapultBase\\Providers\\CatapultBaseServiceProvider"
+                "Joeabdelsater\\CatapultBase\\CatapultBaseServiceProvider"
             ]
         }
     },

@@ -1,6 +1,6 @@
 <?php
 
-namespace Joegabdelsater\CatapultBase\Providers;
+namespace Joegabdelsater\CatapultBase;
 
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\View;
