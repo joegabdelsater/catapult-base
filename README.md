@@ -46,7 +46,7 @@ You can then navigate to the ```/catapult``` url to access the catapult dashboar
 
 
 
-### Setup the relationships:
+## Setup the relationships:
 - Choose the model you want to create relationships for.
 - Drag and drop the models from the models list on the right inside the type of relationship you wish to have.
 - Fill any parameters you wish to fill, or customize any of the suggestions created.
