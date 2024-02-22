@@ -12,5 +12,12 @@
             "email": "joegabdelsater@gmail.com"
         }
     ],
+    "extra": {
+        "laravel": {
+            "providers": [
+                "Joegabdelsater\\CatapultBase\\CatapultBaseServiceProvider"
+            ]
+        }
+    },
     "require": {}
 }
