@@ -18,6 +18,7 @@ function getMethodNameInput(data) {
 }
 
 function getMethodName(relationship, modelNames) {
+    if(relationship === 'ploymorphic_morph_to') return `${modelNames.single}able`;
     const pluralMethodNameRelationships = ['one_to_many', 'many_to_many'];
     return pluralMethodNameRelationships.includes(relationship) ? `${modelNames.plural}` : `${modelNames.single}`;
 }
@@ -25,6 +26,13 @@ function getMethodName(relationship, modelNames) {
 function getMethodBlock(data) {
     const { relationship, relationshipMethod, destinationModel, originModel, key } = data
     const tab = '&nbsp;&nbsp;&nbsp;&nbsp;';
+
+    var parameters = ' ';
+
+    if (relationship !== 'ploymorphic_morph_to') {
+        parameters = `${originModel.replace('::class', '')}<span class="text-sky-500">::class</span> </p>
+        ${getMethodRelationshipInputs(relationship, key)}`;
+    }
 
     return `<div class="p-4">
     <div class="flex flex-row flex-start items-center">
@@ -35,15 +43,14 @@ function getMethodBlock(data) {
 
    <div class="flex flex-row flex-start items-center">
     ${tab}
-    <p class="text-sm font-bold"><span class="text-sky-500">return </span><span class="text-orange-600">$this->${relationshipMethod}</span>(${originModel.replace('::class', '')}<span class="text-sky-500">::class</span>, </p>
-      ${getMethodRelationshipInputs(relationship, key)}
+    <p class="text-sm font-bold"><span class="text-sky-500">return </span><span class="text-orange-600">$this->${relationshipMethod}</span>(${parameters});</p>
+    </div>
+    <p>}</p>  
       <input type="hidden" name="r[${key}][model]" value="${destinationModel}"/>
       <input type="hidden" name="r[${key}][relationship_model]" value="${originModel}"/>
       <input type="hidden" name="r[${key}][relationship]" value="${relationship}"/>
       <input type="hidden" name="r[${key}][relationship_method]" value="${relationshipMethod}"/>
-    <p>);</p>
-    </div>
-    <p>}</p>    
+      
 </div>
 <div class="delete-btn bg-orange-600 rounded-r-md flex items-center justify-center h-full w-full cursor-pointer">${deleteComponent}</div>`;
 }
@@ -52,7 +59,7 @@ function getMethodRelationshipInputs(relationship, key) {
     var inputs = ``;
 
     relationshipMethodInputs[relationship].forEach(input => {
-        inputs += `<input type="text" class="focused block mx-1 font-bold px-2 w-40 text-sm text-white rounded bg-gray-700  border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer w-40" placeholder="${input}" name="r[${key}][${input}]"/>`
+        inputs += `<span>,</span><input type="text" class="focused block mx-1 font-bold px-2 w-40 text-sm text-white rounded bg-gray-700  border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer w-40" placeholder="${input}" name="r[${key}][${input}]"/>`
     });
 
     return inputs;
