@@ -37,6 +37,7 @@ class CatapultInstall extends Command
         CatapultModel::UpdateOrCreate(["name" => 'User'],[
             'name' => 'User',
             'table_name' => 'users',
+            'created' => true,
             'imports' => [
                 '// use Illuminate\Contracts\Auth\MustVerifyEmail;',
                 'use Illuminate\Database\Eloquent\Factories\HasFactory;',
