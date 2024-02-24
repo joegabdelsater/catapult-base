@@ -20,18 +20,18 @@ To install the package:
 composer require --dev joeabdelsater/catapult-base
 ```
 
-Then install the package, this will publish javascript assets and create an entry for the already existing user model in your application:
-```
-php artisan catapult:install
-```
-
-And finally:
-
+Run the package migrations:
 ```
 php artisan migrate
 ```
 
-You can then navigate to the ```/catapult``` url to access the catapult dashboard.
+Finally, run the package installation script. This will publish javascript assets and create an entry for the already existing user model in your application:
+```
+php artisan catapult:install
+```
+
+
+You can now navigate to the ```/catapult``` url to access the catapult dashboard.
 
 # How to use
 
