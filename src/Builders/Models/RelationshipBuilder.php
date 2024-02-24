@@ -24,7 +24,7 @@ class RelationshipBuilder implements Builder
         }
 
         return  <<<PHP
-                public function {$this->relationship->relationship_method_name}() {
+            public function {$this->relationship->relationship_method_name}() {
                     return \$this->{$this->relationship->relationship_method}($methodParameters);
                 }
 

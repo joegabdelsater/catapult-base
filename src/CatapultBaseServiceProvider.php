@@ -8,7 +8,7 @@ use Joeabdelsater\CatapultBase\Models\CatapultController;
 use Joeabdelsater\CatapultBase\Models\CatapultMigration;
 use Joeabdelsater\CatapultBase\Models\CatapultModel;
 use Joeabdelsater\CatapultBase\Console\SetupPackages;
-
+use Joeabdelsater\CatapultBase\Console\CatapultInstall;
 
 class CatapultBaseServiceProvider extends ServiceProvider
 {
@@ -28,6 +28,7 @@ class CatapultBaseServiceProvider extends ServiceProvider
         if ($this->app->runningInConsole()) {
             $this->commands([
                 SetupPackages::class,
+                CatapultInstall::class,
             ]);
         }
 

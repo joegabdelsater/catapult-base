@@ -9,6 +9,21 @@ class ModelBuilder implements Builder
     public $model;
     public $relationshipFactory;
     public $relationships = [];
+
+    public $imports = [
+        'use Illuminate\Database\Eloquent\Model;',
+        'use Illuminate\Database\Eloquent\Factories\HasFactory;',
+    ];
+
+    public $traits = [
+        'use HasFactory;',
+    ];
+
+    public $extends = 'Model';
+    public $implements = [];
+    public $methods = [];
+    public $properties = [];
+
     public function __construct(Object $model)
     {
         $this->model = $model;
@@ -27,87 +42,27 @@ class ModelBuilder implements Builder
 
 
     public function build(): string
-    {
-        $packages = config('packages');
-        $imports = [
-            'use Illuminate\Database\Eloquent\Model;',
-            'use Illuminate\Database\Eloquent\Factories\HasFactory;',
-        ];
+    {      
+        $this->mergeWithPackageConfiguration();
+        $this->mergeWithModelClassDetails();
+        $this->unify();
 
-        $traits = [
-            'use HasFactory;',
-        ];
-
-        $extends = ['Model'];
-        $implements = [];
-        $methods = [];
-        $properties = [];
-
-        $implementsCode = '';
-        $extendsCode = '';
-        $methodsCode = '';
-        $propertiesCode = '';
-        $importsCode = '';
-        $traitsCode = '';
-
-        if ($this->model->only_guard_id) {
-            $properties[] = 'protected $guarded = [\'id\'];';
-        }
-
-        if ($this->model->packages) {
-            foreach ($this->model->packages as $package) {
-                $package = $packages[$package];
-                if (isset($package['model'])) {
-                    $imports = array_merge($imports, $package['model']['imports']);
-                    $traits = array_merge($traits, $package['model']['traits']);
-                    $extends = array_merge($extends, $package['model']['extends']);
-                    $implements = array_merge($implements, $package['model']['implements']);
-                    $methods = array_merge($methods, $package['model']['methods']);
-                    $properties = array_merge($properties, $package['model']['properties']);
-                }
-            }
-        }
-
-        if (count($imports) > 0) {
-            $importsCode = implode("\n", $imports);
-        }
-
-        if (count($traits) > 0) {
-            $traitsCode = implode("\n\t", $traits);
-        }
-
-        if (count($extends) > 0) {
-            $extendsCode .= " extends $extends[0]";
-        }
-
-        if (count($implements) > 0) {
-            $implementsCode = implode(", ", $implements);
-            $implementsCode .= " implements $implementsCode";
-        }
-
-        if (count($properties) > 0) {
-            $propertiesCode = implode("\n\t", $properties);
-        }
-
-        if (count($methods) > 0) {
-            $methodsCode = implode("\n\t", $methods);
-        }
-
+        $code = $this->generateDetailsCode();
 
         $modelContent = <<<PHP
             <?php
             namespace App\Models;
 
-            $importsCode
+            {$code['imports']}
 
-            class {$this->model->name} $extendsCode $implementsCode
+            class {$this->model->name} {$code['extends']} {$code['implements']}
             {
-                $traitsCode
+                {$code['traits']}
 
-                $propertiesCode
+                {$code['properties']}
 
                 /** Pacakges Methods */
-                $methodsCode
+                {$code['methods']}
 
                 /**  Relationships */
                 {$this->getRelationships()}
@@ -117,5 +72,99 @@ class ModelBuilder implements Builder
 
 
         return $modelContent;
+    }
+
+    public function generateDetailsCode()
+    {
+        $code = [
+            'imports' => '',
+            'traits' => '',
+            'extends' => '',
+            'implements' => '',
+            'methods' => '',
+            'properties' => '',
+        ];
+
+
+        if (count($this->imports) > 0) {
+            $code['imports'] = implode("\n", $this->imports);
+        }
+
+        if (count($this->traits) > 0) {
+            $code['traits'] = implode("\n\t", $this->traits);
+        }
+
+        if (!empty($this->extends)) {
+            $code['extends'] = " extends $this->extends";
+        }
+
+        if (count($this->implements) > 0) {
+            $code['implements'] = " implements " .  implode(", ", $this->implements);
+        }
+
+        if (count($this->properties) > 0) {
+            $code['properties'] = implode("\n\t", $this->properties);
+        }
+
+        if (count($this->methods) > 0) {
+            $code['methods'] = implode("\n\t", $this->methods);
+        }   
+
+
+        return $code;
+    }
+    public function mergeWithPackageConfiguration()
+    {
+        if ($this->model->packages) {
+            $packages = config('packages');
+
+            foreach ($this->model->packages as $package) {
+                $package = $packages[$package];
+                if (isset($package['model'])) {
+                    $this->imports = array_merge($this->imports, $package['model']['imports']);
+                    $this->traits = array_merge($this->traits, $package['model']['traits']);
+                    $$this->extends =  $package['model']['extends'];
+                    $$this->implements = array_merge($$this->implements, $package['model']['implements']);
+                    $this->methods = array_merge($this->methods, $package['model']['methods']);
+                    $this->properties = array_merge($this->properties, $package['model']['properties']);
+                }
+            }
+        }
+    }
+
+    public function mergeWithModelClassDetails()
+    {
+        if ($this->model->extends) {
+            $this->extends = $this->model->extends;
+        }
+        
+        if ($this->model->imports) {
+            $this->imports = array_merge($this->imports, $this->model->imports);
+        }
+        
+        if ($this->model->traits) {
+            $this->traits = array_merge($this->traits, $this->model->traits);
+        }
+        
+        if ($this->model->only_guard_id) {
+            $this->properties[] = 'protected $guarded = [\'id\'];';
+        }
+        
+        if ($this->model->properties) {
+            $this->properties = array_merge($this->properties, $this->model->properties);
+        }
+        
+        if ($this->model->implements) {
+            $this->implements = array_merge($this->implements, $this->model->implements);
+        }
+
+    }
+
+    public function unify() {
+        $this->imports = array_unique($this->imports);
+        $this->traits = array_unique($this->traits);
+        $this->implements = array_unique($this->implements);
+        $this->methods = array_unique($this->methods);
+        $this->properties = array_unique($this->properties);
     }
 }

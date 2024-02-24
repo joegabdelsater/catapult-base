@@ -10,7 +10,12 @@ class CatapultModel extends Model
     use HasFactory;
     protected $guarded = ['id'];
     protected $casts = [
-        'packages' => 'array'
+        'packages' => 'array',
+        'extends' => 'array',
+        'implements' => 'array',
+        'traits' => 'array',
+        'imports' => 'array',
+        'properties' => 'array',
     ];
 
     protected $table = 'catapult_models';

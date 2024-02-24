@@ -8,6 +8,7 @@ use Joeabdelsater\CatapultBase\Controllers\RelationshipsController;
 use Joeabdelsater\CatapultBase\Controllers\ControllersController;
 use Joeabdelsater\CatapultBase\Controllers\RoutesController;
 
+
 Route::prefix('catapult')
     ->as('catapult.')
     ->middleware('web')

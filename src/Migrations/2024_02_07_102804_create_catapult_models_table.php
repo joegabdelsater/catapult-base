@@ -17,6 +17,11 @@ return new class extends Migration
             $table->string('table_name');
             $table->boolean('only_guard_id')->default(false);
             $table->json('packages')->nullable();
+            $table->string('extends')->nullable();
+            $table->json('implements')->nullable();
+            $table->json('traits')->nullable();
+            $table->json('properties')->nullable();
+            $table->json('imports')->nullable();
             $table->boolean('created')->default(false);
             $table->boolean('updated')->default(false);
             $table->timestamps();
