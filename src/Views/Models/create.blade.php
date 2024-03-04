@@ -91,7 +91,7 @@
 
                                 </a>
                             @endif
-                            <div class="text-gray-700">{{ $model->name }}.php</div>
+                            <div class="text-gray-700"><a href="{{route('catapult.fields.create', ["modelId" => $model->id])}}">{{ $model->name }}</a></div>
                         </div>
 
                         @if ($model->has_translations)

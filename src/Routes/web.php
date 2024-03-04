@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 use Joeabdelsater\CatapultBase\Controllers\JourneyController;
 use Joeabdelsater\CatapultBase\Controllers\MigrationsController;
 use Joeabdelsater\CatapultBase\Controllers\ModelsController;
+use Joeabdelsater\CatapultBase\Controllers\FieldsController ;
 use Joeabdelsater\CatapultBase\Controllers\RelationshipsController;
 use Joeabdelsater\CatapultBase\Controllers\ControllersController;
 use Joeabdelsater\CatapultBase\Controllers\RoutesController;
@@ -23,6 +24,14 @@ Route::prefix('catapult')
             Route::get('/models/{model}/generate', 'generate')->name('models.generate');
             Route::get('/models/generate', 'generateAll')->name('models.generate-all');
             Route::post('/models/{model}/delete', 'destroy')->name('models.destroy');
+        });
+
+        Route::controller(FieldsController::class)->group(function () {
+            Route::get('/models/{modelId}', 'create')->name('fields.create');
+            // Route::post('/models', 'store')->name('models.store');
+            // Route::get('/models/{model}/generate', 'generate')->name('models.generate');
+            // Route::get('/models/generate', 'generateAll')->name('models.generate-all');
+            // Route::post('/models/{model}/delete', 'destroy')->name('models.destroy');
         });
 
         Route::controller(RelationshipsController::class)->group(function () {
