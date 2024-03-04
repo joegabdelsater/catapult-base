@@ -14,6 +14,12 @@ return new class extends Migration
         Schema::create('catapult_model_fields', function (Blueprint $table) {
             $table->id();
             $table->foreignId('catapult_model_id')->constrained('catapult_models')->onDelete('cascade');
+            $table->string('column_name');
+            $table->string('column_type');
+            $table->json('column_config')->nullable();
+            $table->string('default')->nullable();
+            $table->boolean('nullable')->default(false);
+            $table->boolean('unique')->default(false);
             $table->timestamps();
         });
     }

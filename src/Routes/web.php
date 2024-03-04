@@ -28,7 +28,7 @@ Route::prefix('catapult')
 
         Route::controller(FieldsController::class)->group(function () {
             Route::get('/models/{modelId}', 'create')->name('fields.create');
-            // Route::post('/models', 'store')->name('models.store');
+            Route::post('/models/{modelId}/fields', 'store')->name('field.store');
             // Route::get('/models/{model}/generate', 'generate')->name('models.generate');
             // Route::get('/models/generate', 'generateAll')->name('models.generate-all');
             // Route::post('/models/{model}/delete', 'destroy')->name('models.destroy');

@@ -15,4 +15,8 @@ class FieldsController extends BaseController {
         $models = CatapultModel::all();
         return view('catapult::fields.create', compact('model', 'models'));
     }
+
+    public function store(Request $request, $modelId) {
+        dd($request->all());
+    }
 }
