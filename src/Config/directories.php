@@ -9,4 +9,5 @@ return [
     'catapult_routes' => __DIR__ . '/../../../../../routes/catapult',
     'web_routes_file' => __DIR__ . '/../../../../../routes/web.php',
     'api_routes_file' => __DIR__ . '/../../../../../routes/api.php',
+    'filament_resources' => __DIR__ . '/../../../../../app/Filament/Resources',
 ];

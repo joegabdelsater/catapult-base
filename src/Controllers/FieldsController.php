@@ -10,6 +10,10 @@ use Joeabdelsater\CatapultBase\Models\CatapultField;
 use Illuminate\Support\Str;
 use Joeabdelsater\CatapultBase\Classes\ModelService;
 use Joeabdelsater\CatapultBase\Models\CatapultPackage;
+use Joeabdelsater\CatapultBase\Builders\Migrations\MigrationBuilder;
+use Joeabdelsater\CatapultBase\Builders\Migrations\ValidationBuilder;
+use Joeabdelsater\CatapultBase\Builders\ClassGenerator;
+use Illuminate\Support\Facades\Artisan;
 
 class FieldsController extends BaseController
 {
@@ -34,18 +38,17 @@ class FieldsController extends BaseController
     {
         $model = CatapultModel::with('fields')->find($modelId);
         $migrationLines = [];
+        $_validationLines = [];
         $validationLines = [];
         $filamentColumnLines = [];
         $filamentFieldLines = [];
         $imports = [];
 
-
-
         foreach ($model->fields as $field) {
             $migrationLines[] = $this->getMigrationLine($field);
 
             if ($field->validation) {
-                $validationLines[$field->column_name] = $field->validation;
+                $_validationLines[$field->column_name] = $field->validation;
             }
 
             if ($field->admin_column_type) {
@@ -65,16 +68,23 @@ class FieldsController extends BaseController
 
         $imports = array_unique($imports);
 
-        foreach ($validationLines as $column => $validation) {
+
+
+        foreach ($_validationLines as $column => $validation) {
             $validationLines[] = "'" . $column . "' => '" . $validation . "'";
         }
 
-        $validationCode = "\n\t\t\t\t\t". implode(",\n\t\t\t\t\t", $validationLines);
-        $filamentColumnCode =  "\n\t\t\t\t\t" . implode(",\n\t\t\t\t\t", $filamentColumnLines);
-        $filamentFieldCode =  "\n\t\t\t\t\t" . implode(",\n\t\t\t\t\t", $filamentFieldLines);
-        $migrationCode =  "\n\t\t\t\t\t" . implode("\n\t\t\t\t\t", $migrationLines);
+        $validationCode = implode(",\n\t\t\t\t", $validationLines);
+        $filamentColumnCode =  "\t" . implode(",\n\t\t\t\t", $filamentColumnLines);
+        $filamentFieldCode =  "\t" . implode(",\n\t\t\t\t", $filamentFieldLines);
+        $migrationCode =   implode("\n\t\t\t\t", $migrationLines);
+        $importsCode = implode("\n", $imports);
 
 
+
+        $this->generateMigration($model, $migrationCode);
+        $this->generateValidation($model, $validationCode);
+        $this->generateFilament($model, $filamentColumnCode, $filamentFieldCode, $importsCode);
     }
 
     public function getAdminFieldLine($field)
@@ -133,7 +143,6 @@ class FieldsController extends BaseController
                     'use Filament\Forms\Components\Select;',
                     'use App\Models\\' . $field->admin_field_config['related_model'] . ';'
                 ];
-
 
                 $imports['line'] = 'Select::make(\'' . $field->column_name . '\')->options(' . $this->generateModelOptions($field->admin_field_config) . ')' . $this->generateSelectMethods($field->admin_field_config);
                 break;
@@ -254,7 +263,7 @@ class FieldsController extends BaseController
 
         switch ($field->admin_column_type) {
             case 'text_column':
-                $imports['import'] = ['use Filament\Forms\Components\TextColumn;'];
+                $imports['import'] = ['use Filament\Tables\Columns\TextColumn;'];
                 $imports['line'] = 'TextColumn::make(\'' . $field->column_name . '\')';
                 break;
 
@@ -420,5 +429,124 @@ class FieldsController extends BaseController
         }
 
         return $methods;
+    }
+
+    public function generateMigration($model, $migrationCode)
+    {
+        if (!is_dir(config('directories.temp_migrations'))) {
+            mkdir(config('directories.temp_migrations'));
+        }
+
+        if (!is_dir(config('directories.validation_requests'))) {
+            mkdir(config('directories.validation_requests'));
+        }
+
+        $stub =
+            "<?php
+    use Illuminate\Database\Migrations\Migration;
+    use Illuminate\Database\Schema\Blueprint;
+    use Illuminate\Support\Facades\Schema;
+
+return new class extends Migration
+    {
+        /**
+         * Run the migrations.
+         */
+        public function up()
+        {
+          return Schema::create('{$model->table_name}', function (Blueprint \$table) {
+                \$table->id();
+                $migrationCode
+                \$table->timestamps();
+            });
+        }
+
+        /**
+         * Reverse the migrations.
+         */
+        public function down(): void
+        {
+            Schema::dropIfExists('{$model->table_name}');
+        }
+    };
+
+
+
+    ";
+
+
+        $migrationGenerator = new ClassGenerator(filePath: config('directories.temp_migrations'), fileName: 'create_' . $model->table_name . '_table.php', content: $stub);
+        $migrationGenerator->generate()
+            ->renameFile(date('Y_m_d') . '_' . time() . '_create_' . $model->table_name . '_table.php')
+            ->moveMigration(config('directories.migrations'));
+    }
+
+
+    public function generateValidation($model, $validationCode)
+    {
+        $stub = <<<PHP
+            <?php
+            namespace App\Http\Requests;
+
+            use Illuminate\Foundation\Http\FormRequest;
+
+            class {$model->name}Request extends FormRequest
+            {
+                /**
+                 * Determine if the user is authorized to make this request.
+                 */
+                public function authorize(): bool
+                {
+                    return auth('web')->check();
+                }
+
+                /**
+                 * Get the validation rules that apply to the request.
+                 *
+                 * @return array<string, \Illuminate\Contracts\Validation\ValidationRule|array<mixed>|string>
+                 */
+                public function rules(): array
+                {
+                    return [
+                        $validationCode
+                    ];
+                }
+            }
+        PHP;
+
+        $validationGenerator = new ClassGenerator(filePath: config('directories.validation_requests'), fileName: $model->name . 'Request.php', content: $stub);
+        $validationGenerator->generate();
+    }
+
+    public function generateFilament($model, $columnsCode, $fieldsCode, $importsCode)
+    {   
+
+        Artisan::call('make:filament-resource', [
+            'name' => $model->name,
+        ]);
+
+        $resourcePath = config('directories.filament_resources') . '/' . $model->name . 'Resource.php';
+
+        $resource = file_get_contents($resourcePath);
+
+        //handle the importsCode
+        $pattern = '/(use [^;]+;)$/m';
+        $replacement = "$1\n$importsCode";
+        $modifiedContents = preg_replace($pattern, $replacement, $resource, 1);
+
+        //handle the fields
+        $pattern = '/->schema\(\[\s*\/\/.*?\]\);/s';
+        $replacement = '->schema([
+            ' . $fieldsCode . '
+        ]);';
+        $modifiedContents = preg_replace($pattern, $replacement, $modifiedContents);
+
+        //handle the columns
+        $pattern = '/->columns\(\[\s*\/\/.*?\]\);/s';
+        $replacement = '->columns([
+            ' . $columnsCode . '
+        ]);';
+        $modifiedContents = preg_replace($pattern, $replacement, $modifiedContents);
+        file_put_contents($resourcePath, $modifiedContents);
     }
 }
