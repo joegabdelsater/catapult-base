@@ -28,4 +28,9 @@ class CatapultModel extends Model
     {
         return $this->hasOne(CatapultMigration::class);
     }
+
+    public function fields()
+    {
+        return $this->hasMany(CatapultField::class);
+    }
 }

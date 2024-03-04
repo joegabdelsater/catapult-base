@@ -9,7 +9,7 @@
 
         <div class="mt-8 grid grid-cols-2 gap-20">
             <div>
-                <form action="{{route('catapult.field.store', ['modelId' => $model->id])}}" method="POSt">
+                <form action="{{ route('catapult.field.store', ['modelId' => $model->id]) }}" method="POSt">
                     @csrf
                     <!-- Modal content -->
                     <div class="relative p-4 bg-white rounded-lg shadow dark:bg-gray-800 sm:p-5 mb-4">
@@ -42,6 +42,7 @@
                                     <option value="text">Text</option>
                                     <option value="boolean">Boolean</option>
                                     <option value="integer">Integer</option>
+                                    <option value="bigInteger">Big Integer</option>
                                     <option value="float">Float</option>
                                     <option value="double">Double</option>
                                     <option value="decimal">Decimal</option>
@@ -98,9 +99,16 @@
                                 Add Validation
                             </h3>
                         </div>
+
+                        <div>
+                            <label for="validation"
+                                class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Valdiation</label>
+                            <input type="text" name="validation" id="validation"
+                                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
+                                placeholder="required|min:8">
+                        </div>
                         {{-- Checkboxes --}}
-                        <div class="grid gap-4 mb-4 sm:grid-cols-4 mb-8">
-                            {{-- Required --}}
+                        {{-- <div class="grid gap-4 mb-4 sm:grid-cols-4 mb-8">
                             <div class="flex items-center pt-6">
                                 <input id="required" type="checkbox" value="" name="required"
                                     class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
@@ -153,10 +161,10 @@
 
                             </div>
 
-                        </div>
+                        </div> --}}
 
                         {{-- Inputs --}}
-                        <div class="grid gap-4 mb-4 sm:grid-cols-4">
+                        {{-- <div class="grid gap-4 mb-4 sm:grid-cols-4">
 
                             <div>
                                 <label for="min"
@@ -191,7 +199,7 @@
                                     placeholder="anotherfield,value">
                             </div>
 
-                        </div>
+                        </div> --}}
                     </div>
 
 
@@ -212,7 +220,7 @@
                                     type in listing table</label>
                                 <select id="listColumnType" name="admin_column_type"
                                     class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500">
-                                    <option selected="">Select list table column type</option>
+                                    <option selected value="">Select list table column type</option>
                                     <option value="text_column">Text Column</option>
                                     <option value="relationship_text_column">Relationship Text Column</option>
                                     {{-- <option value="icon_column">Icon Column</option> --}}
@@ -245,7 +253,7 @@
                                     create/edit form</label>
                                 <select id="formFieldType" name="admin_field_type"
                                     class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500">
-                                    <option selected="">Select form field column type</option>
+                                    <option selected value="">Select form field column type</option>
                                     <option value="text_input">Text Input</option>
                                     <option value="select">Select</option>
                                     <option value="relationship_select">Relationship Select</option>
@@ -279,7 +287,29 @@
                     <h2 class="text-xl font-bold">{{ $model->name }} Model</h2>
                 </div>
                 <div class="mt-4">
-
+                    @foreach ($model->fields as $field)
+                        <div
+                            class="flex justify-between items-center bg-white rounded-lg shadow dark:bg-gray-800 sm:p-5 mb-4">
+                            <div>
+                                <h3 class="text-lg font-semibold text-gray-900 dark:text-white">
+                                    {{ $field->column_name }}
+                                </h3>
+                                <div class="flex flex-row ">
+                                    <p class="text-sm text-gray-500 dark:text-gray-400">
+                                        {{ $field->column_type }}, {{ $field->admin_column_type }},
+                                        {{ $field->admin_field_type }} {{ $field->nullable ? ', Nullable' : '' }}
+                                        {{ $field->unique ? ', Unique' : '' }}
+                                        {{ $field->default ? ', Default: ' . $field->default : '' }}
+                                        {{ $field->validation ? ', Validation: ' . $field->validation : '' }}
+                                    </p>
+                                </div>
+                            </div>
+                            <div>
+                                <a href=""
+                                    class="text-blue-600 hover:text-blue-700 dark:text-blue-400 dark:hover:text-blue-500">Edit</a>
+                            </div>
+                        </div>
+                    @endforeach
                 </div>
             </div>
         </div>
@@ -318,7 +348,7 @@
             return `<div><label for="${name}"
                                             class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">${label}</label>  <input type="${type}" name="${name}" id="${name}"
                                             class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
-                                            placeholder="${placeholder}" required="${required}"></div>`;
+                                            placeholder="${placeholder}" ${required ? 'require' : '' }></div>`;
         }
 
         function getTextAreaField(label, name, placeholder, required = false) {
@@ -353,25 +383,33 @@
             const dbColumnsDynamicInputs = document.getElementById('dbColumnsDynamicInputs');
             dbColumnsDynamicInputs.innerHTML = ''; // Clear current inputs
 
-            if (selectedType === 'enum') {
+            if (selectedType === 'string' || selectedType === 'text') {
+                dbColumnsDynamicInputs.innerHTML += getTextField('length', 'column_config[length]',
+                    'length')
+            } else if (selectedType === 'enum') {
                 dbColumnsDynamicInputs.innerHTML += getTextField('Enum Options', 'column_config[enum_options]',
                     'Enter enum options comma-separated')
             } else if (selectedType === 'decimal') {
-                dbColumnsDynamicInputs.innerHTML += getTextField('Precision (total digits)', 'column_config[precision]', 'Enter precision')
-                dbColumnsDynamicInputs.innerHTML += getTextField('Scale (decimal digits)', 'column_config[scale]', 'Enter scale')
+                dbColumnsDynamicInputs.innerHTML += getTextField('Precision (total digits)', 'column_config[precision]',
+                    'Enter precision')
+                dbColumnsDynamicInputs.innerHTML += getTextField('Scale (decimal digits)', 'column_config[scale]',
+                    'Enter scale')
             } else if (selectedType === 'float') {
-                dbColumnsDynamicInputs.innerHTML += getTextField('Precision (total digits)', 'column_config[precision]', 'Enter precision')
-                dbColumnsDynamicInputs.innerHTML += getTextField('Scale (decimal digits)', 'column_config[scale]', 'Enter scale')
+                dbColumnsDynamicInputs.innerHTML += getTextField('Precision (total digits)', 'column_config[precision]',
+                    'Enter precision')
+                dbColumnsDynamicInputs.innerHTML += getTextField('Scale (decimal digits)', 'column_config[scale]',
+                    'Enter scale')
             } else if (selectedType === 'double') {
-                dbColumnsDynamicInputs.innerHTML += getTextField('Precision (total digits)', 'column_config[precision]', 'Enter precision')
-                dbColumnsDynamicInputs.innerHTML += getTextField('Scale (decimal digits)', 'column_config[scale]', 'Enter scale')
-            } else if (selectedType === 'text_column') {
-                dbColumnsDynamicInputsicon_columninnerHTML += getTextField('Length', 'column_config[length]', 'Enter length (optional)')
+                dbColumnsDynamicInputs.innerHTML += getTextField('Precision (total digits)', 'column_config[precision]',
+                    'Enter precision')
+                dbColumnsDynamicInputs.innerHTML += getTextField('Scale (decimal digits)', 'column_config[scale]',
+                    'Enter scale')
             } else if (selectedType === 'relationship') {
-                dbColumnsDynamicInputs.innerHTML += getSelectField('Related Model', 'column_config[related_model]', models.map(model => ({
-                    value: model.name,
-                    label: model.name
-                })))
+                dbColumnsDynamicInputs.innerHTML += getSelectField('Related Model', 'column_config[related_model]', models
+                    .map(model => ({
+                        value: model.name,
+                        label: model.name
+                    })))
 
                 dbColumnsDynamicInputs.innerHTML += getSelectField('On Delete', 'column_config[on_delete]', [{
                     value: 'cascade',
@@ -410,46 +448,58 @@
             formFieldDynamicInputs.innerHTML = ''; // Clear current inputs
 
             if (selectedType === 'text_input') {
-                formFieldDynamicInputs.innerHTML += getTextField('Min length', 'admin_field_config[min]', 'Enter min length')
-                formFieldDynamicInputs.innerHTML += getTextField('Max length', 'admin_field_config[max]', 'Enter max length')
+                formFieldDynamicInputs.innerHTML += getTextField('Label', 'admin_field_config[label]', 'Enter label')
+
+                formFieldDynamicInputs.innerHTML += getTextField('Min length', 'admin_field_config[min]','Enter min length')
+                formFieldDynamicInputs.innerHTML += getTextField('Max length', 'admin_field_config[max]',
+                    'Enter max length')
 
                 formFieldDynamicInputs.innerHTML += getCheckboxField('Required', 'admin_field_config[required]')
+
+                formFieldDynamicInputs.innerHTML += getCheckboxField('Disabled', 'admin_field_config[disabled]')
+
                 formFieldDynamicInputs.innerHTML += getCheckboxField('Readonly', 'admin_field_config[readonly]')
                 formFieldDynamicInputs.innerHTML += getCheckboxField('Password', 'admin_field_config[[password]')
                 formFieldDynamicInputs.innerHTML += getCheckboxField('Numeric', 'admin_field_config[numeric]')
 
             } else if (selectedType === 'select') {
-                formFieldDynamicInputs.innerHTML += getTextAreaField('Options', 'admin_field_config[options]', 'key1:value 1,key2:value 2',
+                formFieldDynamicInputs.innerHTML += getTextAreaField('Options', 'admin_field_config[options]',
+                    'key1:value 1,key2:value 2',
                     true)
                 formFieldDynamicInputs.innerHTML += getCheckboxField('Searchable', 'admin_field_config[searchable]')
                 formFieldDynamicInputs.innerHTML += getCheckboxField('Multiple', 'admin_field_config[multiple]')
             } else if (selectedType === 'relationship_select') {
-                formFieldDynamicInputs.innerHTML += getSelectField('Related Model', 'admin_field_config[related_model]', models.map(model => ({
-                    value: model.name,
-                    label: model.name
-                })))
+                formFieldDynamicInputs.innerHTML += getSelectField('Related Model', 'admin_field_config[related_model]',
+                    models.map(model => ({
+                        value: model.name,
+                        label: model.name
+                    })))
 
                 formFieldDynamicInputs.innerHTML += getTextField('Pluck', 'admin_field_config[pluck]', 'name, id')
 
                 formFieldDynamicInputs.innerHTML += getCheckboxField('Searchable', 'admin_field_config[searchable]')
                 formFieldDynamicInputs.innerHTML += getCheckboxField('Multiple', 'admin_field_config[multiple]')
             } else if (selectedType === 'radio') {
-                formFieldDynamicInputs.innerHTML += getTextAreaField('Options', 'admin_field_config[options]', 'key1:value 1,key2:value 2',
+                formFieldDynamicInputs.innerHTML += getTextAreaField('Options', 'admin_field_config[options]',
+                    'key1:value 1,key2:value 2',
                     true)
             } else if (selectedType === 'time' || selectedType === 'date' || selectedType === 'date_time') {
                 formFieldDynamicInputs.innerHTML += getTextField('Format', 'admin_field_config[format]', 'Enter format')
             } else if (selectedType === 'file_upload') {
                 formFieldDynamicInputs.innerHTML += getTextField('Disk', 'admin_field_config[disk]', 'public')
                 formFieldDynamicInputs.innerHTML += getTextField('Directory', 'admin_field_config[directory]', 'directory')
-                formFieldDynamicInputs.innerHTML += getTextField('Accepted File Types', 'admin_field_config[accepted_file_types]', 'application/pdf, image/*')
-                formFieldDynamicInputs.innerHTML += getTextField('Min size', 'admin_field_config[min_size]', 'Enter min size', '512')
-                formFieldDynamicInputs.innerHTML += getTextField('Max size', 'admin_field_config[max_size]', 'Enter max size', '1024')
+                formFieldDynamicInputs.innerHTML += getTextField('Accepted File Types',
+                    'admin_field_config[accepted_file_types]', 'application/pdf, image/*')
+                formFieldDynamicInputs.innerHTML += getTextField('Min size', 'admin_field_config[min_size]',
+                    'Enter min size', '512')
+                formFieldDynamicInputs.innerHTML += getTextField('Max size', 'admin_field_config[max_size]',
+                    'Enter max size', '1024')
 
-                
+
                 formFieldDynamicInputs.innerHTML += getCheckboxField('Multiple', 'admin_field_config[multiple]')
                 formFieldDynamicInputs.innerHTML += getCheckboxField('Image', 'admin_field_config[image]')
                 formFieldDynamicInputs.innerHTML += getCheckboxField('Avatar', 'admin_field_config[avatar]')
-                formFieldDynamicInputs.innerHTML += getCheckboxField('Image Editor', 'admin_field_config[imageEditor]')
+                formFieldDynamicInputs.innerHTML += getCheckboxField('Image Editor', 'admin_field_config[image_editor]')
                 formFieldDynamicInputs.innerHTML += getCheckboxField('Openable', 'admin_field_config[openable]')
             }
         }
