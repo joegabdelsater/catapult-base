@@ -2,6 +2,7 @@
 
 namespace Joeabdelsater\CatapultBase;
 
+
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\View;
 use Joeabdelsater\CatapultBase\Models\CatapultController;
@@ -9,6 +10,8 @@ use Joeabdelsater\CatapultBase\Models\CatapultMigration;
 use Joeabdelsater\CatapultBase\Models\CatapultModel;
 use Joeabdelsater\CatapultBase\Console\SetupPackages;
 use Joeabdelsater\CatapultBase\Console\CatapultInstall;
+use Joeabdelsater\CatapultBase\Console\TranslateFilamentServiceProvider;
+
 
 class CatapultBaseServiceProvider extends ServiceProvider
 {
@@ -29,6 +32,7 @@ class CatapultBaseServiceProvider extends ServiceProvider
             $this->commands([
                 SetupPackages::class,
                 CatapultInstall::class,
+                TranslateFilamentServiceProvider::class,
             ]);
         }
 

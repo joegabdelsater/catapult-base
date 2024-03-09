@@ -40,8 +40,8 @@ class JourneyController extends BaseController
 
                 $postInstallCommands = array_merge($postInstallCommands, $availablePackages[$package]['post_install']);
 
-                CatapultPackage::create(['package_key' => $package]);
             }
+            CatapultPackage::create(['package_key' => $package]);
         }
 
         //add the post install command for each package

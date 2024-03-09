@@ -104,6 +104,17 @@ class ModelBuilder implements Builder
 
         if (count($this->properties) > 0) {
             $code['properties'] = implode("\n\t", $this->properties);
+            //** check for translatable fields */
+            $translatableFields = [];
+            foreach ($this->model->fields as $field) {
+                if ($field->translatable) {
+                    $translatableFields[] = "'$field->name'";
+                }
+            }
+
+            if (count($translatableFields) > 0) {
+                $code['properties'] = str_replace('@translatableFields', implode(', ', $translatableFields), $code['properties']);
+            }
         }
 
         if (count($this->methods) > 0) {
@@ -120,6 +131,13 @@ class ModelBuilder implements Builder
 
             foreach ($this->model->packages as $package) {
                 $package = $packages[$package];
+
+                if(isset($package['model']['model'])) {
+                    if(!in_array($this->model->name, $package['model']['model'])){
+                        continue;
+                    }
+                }
+
                 if (isset($package['model'])) {
                     $this->imports = array_merge($this->imports, $package['model']['imports']);
                     $this->traits = array_merge($this->traits, $package['model']['traits']);

@@ -28,7 +28,7 @@ class ModelsController extends BaseController
 
     public function generate(CatapultModel $model)
     {
-        $model = CatapultModel::with('relationships')->find($model->id);
+        $model = CatapultModel::with('relationships', 'fields')->find($model->id);
         ModelService::generate($model);
 
         return redirect()->back();
@@ -36,7 +36,7 @@ class ModelsController extends BaseController
 
     public function generateAll()
     {
-        $models = CatapultModel::with('relationships')->get();
+        $models = CatapultModel::with('relationships' , 'fields')->get();
 
         foreach ($models as $model) {
             ModelService::generate($model);

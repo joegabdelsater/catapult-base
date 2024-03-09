@@ -17,7 +17,7 @@ return [
             'implements' => [],
             'methods' => [],
             'properties' => [
-                'public $translatable = [];',
+                'public $translatable = [@translatableFields];',
             ],
         ]
     ],
@@ -49,23 +49,69 @@ return [
     'filament' => [
         "dev" => false,
         'package_name' => 'laravel-filament',
-        'composer_require' => 'laravel/filament',
+        'composer_require' => 'filament/filament',
         'version' => '^3.2',
-        'post_install' => ['@php artisan filament:install --panels'],
+        'post_install' => ['@php artisan filament:install --panels', '@php artisan make:filament-user --name=Admin --password=password --email=admin@admin.com'],
         'model' => [
+            'model' => ['User'],
             'imports' => [
                 'use Filament\Models\Contracts\FilamentUser;',
                 'use Filament\Panel;',
                 'use Illuminate\Foundation\Auth\User as Authenticatable;'
             ],
             'traits' => [],
-            'extends' => [], 
+            'extends' => [],
             'implements' => [],
+            // 'methods' => ['public function canAccessPanel(Panel $panel): bool
+            // {
+            //     return str_ends_with($this->email, "@yourdomain.com") && $this->hasVerifiedEmail();
+            // }'],
             'methods' => ['public function canAccessPanel(Panel $panel): bool
             {
-                return str_ends_with($this->email, "@yourdomain.com") && $this->hasVerifiedEmail();
+                return true;
             }'],
             'properties' => [],
+        ]
+    ],
+    'filament_translatable' => [
+        "dev" => false,
+        'package_name' => 'filament/spatie-laravel-translatable-plugin',
+        'composer_require' => 'filament/spatie-laravel-translatable-plugin',
+        'version' => '^3.2',
+        'post_install' => ['@php artisan catapult:translate-fialement-service-provider'],
+        'model' => [
+            'imports' => [
+                'use Spatie\Sluggable\HasSlug;',
+                'use Spatie\Sluggable\SlugOptions;'
+            ],
+            'traits' => [
+                'use HasSlug;',
+            ],
+            'extends' => [],
+            'implements' => [],
+            'methods' => ["public function getSlugOptions() : SlugOptions
+            {
+                return SlugOptions::create()
+                    ->generateSlugsFrom('name')
+                    ->saveSlugsTo('slug');
+            }"],
+            'properties' => [],
+        ],
+        'service_provider' => [
+            'imports' => ['use Filament\SpatieLaravelTranslatablePlugin;'],
+            'chained_methods' => [
+                'method' => 'panel',
+                'chain' => [
+                    "->plugin(
+                        SpatieLaravelTranslatablePlugin::make()
+                            ->defaultLocales(['en', 'am']),
+                    )"
+                ]
+            ]
+        ],
+        'resource' => [
+            'import' => ['use Filament\Resources\Concerns\Translatable;'],
+            'traits' => ['use Translatable;', 'use '],
         ]
     ]
 ];

@@ -10,4 +10,5 @@ return [
     'web_routes_file' => __DIR__ . '/../../../../../routes/web.php',
     'api_routes_file' => __DIR__ . '/../../../../../routes/api.php',
     'filament_resources' => __DIR__ . '/../../../../../app/Filament/Resources',
+    'filament_service_provider_file' => __DIR__ . '/../../../../../app/Providers/Filament/AdminPanelProvider.php',
 ];

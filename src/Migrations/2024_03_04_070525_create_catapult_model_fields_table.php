@@ -32,6 +32,7 @@ return new class extends Migration
             $table->string('admin_field_type')->nullable();
             $table->json('admin_field_config')->nullable();
 
+            $table->boolean('translatable')->default(false)->nullable();
             $table->timestamps();
         });
     }

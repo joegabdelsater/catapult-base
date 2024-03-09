@@ -1,7 +1,7 @@
 @extends('catapult::layout.base')
 
 @section('content')
-    <div class="container m-auto py-8">
+    <div class="container mx-auto px-4 py-8">
         <h1 class="text-2xl font-bold mb-4">Let's setup the fields on your model</h1>
         <p>Fields are the columns in your database table. You can add as many fields as you want.</p>
         <p>Here you define the type of the column in the database, how you wish to validate it, and configure it for your
@@ -87,6 +87,13 @@
                                 <label for="unique"
                                     class="ms-2 text-sm font-medium text-gray-900 dark:text-gray-300">Unique</label>
 
+                            </div>
+
+                            <div class="flex items-center pt-6">
+                                <input id="translatable" type="checkbox" value="" name="translatable"
+                                    class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
+                                <label for="translatable"
+                                    class="ms-2 text-sm font-medium text-gray-900 dark:text-gray-300">Translatable</label>
                             </div>
                         </div>
                     </div>
