@@ -322,6 +322,8 @@
                                         {{ $field->unique ? ', Unique' : '' }}
                                         {{ $field->default ? ', Default: ' . $field->default : '' }}
                                         {{ $field->validation ? ', Validation: ' . $field->validation : '' }}
+                                        {{ $field->translatable ? ', translatable' : '' }}
+
                                     </p>
                                 </div>
                             </div>

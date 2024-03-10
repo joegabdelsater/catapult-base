@@ -276,7 +276,7 @@ class FieldsController extends BaseController
                 }
 
                 if ($field->admin_field_config && isset($field->admin_field_config['accepted_file_types'])) {
-                    $imports['line'] = $imports['line'] . '->acceptedFileTypes(\'' . $field->admin_field_config['accepted_file_types'] . '\')';
+                    $imports['line'] = $imports['line'] . '->acceptedFileTypes([\'' . $field->admin_field_config['accepted_file_types'] . '\'])';
                 }
 
                 if ($field->admin_field_config && isset($field->admin_field_config['max_size'])) {
@@ -699,7 +699,7 @@ return new class extends Migration
         // Check if the use statement already exists to avoid duplication
         if (!str_contains($resourcePageContent, $useStatement)) {
             $positionForUse = strpos($resourcePageContent, "{") + 1;
-            $resourcePagecontent = substr_replace($resourcePageContent, "\n    " . $useStatement . "\n", $positionForUse, 0);
+            $resourcePageContent = substr_replace($resourcePageContent, "\n    " . $useStatement . "\n", $positionForUse, 0);
         }
 
         // Locate the `getHeaderActions` method and insert the new action
