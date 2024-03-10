@@ -608,10 +608,6 @@ return new class extends Migration
             'name' => $model->name,
         ]);
 
-<<<<<<< HEAD
-
-=======
->>>>>>> origin/main
         $this->modifyResource($model, $importsCode, $fieldsCode, $columnsCode, $traitsCode);
 
         /** Modify the resource pages if translation is required */
@@ -703,12 +699,7 @@ return new class extends Migration
         // Check if the use statement already exists to avoid duplication
         if (!str_contains($resourcePageContent, $useStatement)) {
             $positionForUse = strpos($resourcePageContent, "{") + 1;
-<<<<<<< HEAD
-            $resourcePageContent = substr_replace($resourcePageContent, "\n    " . $useStatement . "\n", $positionForUse, 0);
-
-=======
             $resourcePagecontent = substr_replace($resourcePageContent, "\n    " . $useStatement . "\n", $positionForUse, 0);
->>>>>>> origin/main
         }
 
         // Locate the `getHeaderActions` method and insert the new action
@@ -723,30 +714,23 @@ return new class extends Migration
 
     public function modifyListPage($model, $resourcePagesPath)
     {
-<<<<<<< HEAD
+
         $listPagePath = $resourcePagesPath . '/List' . Str::plural($model->name) . '.php';
 
-=======
-        $listPagePath = $resourcePagesPath . '/List' . $model->name . '.php';
->>>>>>> origin/main
+
+
         // Read the existing content of the file
         $resourcePageContent = file_get_contents($listPagePath);
 
         // Prepare the new lines to be added
-<<<<<<< HEAD
+
         $useStatement = 'use ListRecords\Concerns\Translatable;';
-=======
-        $useStatement = 'use ListRecord\Concerns\Translatable;';
->>>>>>> origin/main
+
 
         // Check if the use statement already exists to avoid duplication
         if (!str_contains($resourcePageContent, $useStatement)) {
             $positionForUse = strpos($resourcePageContent, "{") + 1;
-<<<<<<< HEAD
             $resourcePageContent = substr_replace($resourcePageContent, "\n    " . $useStatement . "\n", $positionForUse, 0);
-=======
-            $resourcePagecontent = substr_replace($resourcePageContent, "\n    " . $useStatement . "\n", $positionForUse, 0);
->>>>>>> origin/main
         }
 
         // Locate the `getHeaderActions` method and insert the new action
