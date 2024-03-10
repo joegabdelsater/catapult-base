@@ -29,10 +29,10 @@ Route::prefix('catapult')
         Route::controller(FieldsController::class)->group(function () {
             Route::get('/models/{modelId}', 'create')->name('fields.create');
             Route::post('/models/{modelId}/fields', 'store')->name('field.store');
-            Route::get('/models/{modelId}/fields/build', 'build')->name('fields.build');
+            Route::post('/models/{modelId}/fields/build', 'build')->name('fields.build');
             // Route::get('/models/{model}/generate', 'generate')->name('models.generate');
             // Route::get('/models/generate', 'generateAll')->name('models.generate-all');
-            // Route::post('/models/{model}/delete', 'destroy')->name('models.destroy');
+            Route::delete('/models/field/{fieldId}/delete', 'delete')->name('field.destroy');
         });
 
         Route::controller(RelationshipsController::class)->group(function () {

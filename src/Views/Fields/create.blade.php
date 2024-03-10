@@ -7,7 +7,15 @@
         <p>Here you define the type of the column in the database, how you wish to validate it, and configure it for your
             filament dashboard</p>
 
+
         <div class="mt-8 grid grid-cols-2 gap-20">
+            @if ($errors->any())
+                {{-- show all errors --}}
+                <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative mt-4" role="alert">
+                    <strong class="font-bold">Holy smokes! </strong>
+                    <span class="block sm:inline">{{ $errors->first() }}</span>
+                    <span class="absolute top-0 bottom-0 right-0 px-4 py-3">
+            @endif
             <div>
                 <form action="{{ route('catapult.field.store', ['modelId' => $model->id]) }}" method="POSt">
                     @csrf
@@ -74,7 +82,7 @@
 
 
                             <div class="flex items-center pt-6">
-                                <input id="nullable" type="checkbox" value="" name="nullable"
+                                <input id="nullable" type="checkbox"  name="nullable"
                                     class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
                                 <label for="nullable"
                                     class="ms-2 text-sm font-medium text-gray-900 dark:text-gray-300">Nullable</label>
@@ -82,7 +90,7 @@
                             </div>
 
                             <div class="flex items-center pt-6">
-                                <input id="unique" type="checkbox" value="" name="unique"
+                                <input id="unique" type="checkbox"  name="unique"
                                     class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
                                 <label for="unique"
                                     class="ms-2 text-sm font-medium text-gray-900 dark:text-gray-300">Unique</label>
@@ -90,7 +98,7 @@
                             </div>
 
                             <div class="flex items-center pt-6">
-                                <input id="translatable" type="checkbox" value="" name="translatable"
+                                <input id="translatable" type="checkbox" name="translatable"
                                     class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
                                 <label for="translatable"
                                     class="ms-2 text-sm font-medium text-gray-900 dark:text-gray-300">Translatable</label>
@@ -292,6 +300,12 @@
             <div>
                 <div class="flex justify-between items-center">
                     <h2 class="text-xl font-bold">{{ $model->name }} Model</h2>
+                    <form action="{{ route('catapult.fields.build', ['modelId' => $model->id]) }}" method="POST">
+                        @csrf
+
+                        <button type="submit"
+                            class="btn text-white hover:text-red-700 bg-red-600 dark:hover:text-red-500 p-2 rounded">Generate</button>
+                    </form>
                 </div>
                 <div class="mt-4">
                     @foreach ($model->fields as $field)
@@ -312,8 +326,14 @@
                                 </div>
                             </div>
                             <div>
-                                <a href=""
-                                    class="text-blue-600 hover:text-blue-700 dark:text-blue-400 dark:hover:text-blue-500">Edit</a>
+                                <form action="{{ route('catapult.field.destroy', ['fieldId' => $field->id]) }}"
+                                    method="POST">
+                                    @csrf
+                                    @method('DELETE')
+                                    <button type="submit"
+                                        class="text-red-600 hover:text-red-400 dark:text-red-400 dark:hover:text-red-300">Delete</button>
+                                </form>
+
                             </div>
                         </div>
                     @endforeach
@@ -379,7 +399,7 @@
 
         function getCheckboxField(label, name) {
             return `<div class="flex items-center pt-6">
-                                            <input id="${name}" type="checkbox" value="" name="${name}"
+                                            <input id="${name}" type="checkbox"  name="${name}"
                                                 class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
                                             <label for="${name}"
                                                 class="ms-2 text-sm font-medium text-gray-900 dark:text-gray-300">${label}</label>
@@ -457,7 +477,8 @@
             if (selectedType === 'text_input') {
                 formFieldDynamicInputs.innerHTML += getTextField('Label', 'admin_field_config[label]', 'Enter label')
 
-                formFieldDynamicInputs.innerHTML += getTextField('Min length', 'admin_field_config[min]','Enter min length')
+                formFieldDynamicInputs.innerHTML += getTextField('Min length', 'admin_field_config[min]',
+                    'Enter min length')
                 formFieldDynamicInputs.innerHTML += getTextField('Max length', 'admin_field_config[max]',
                     'Enter max length')
 
@@ -469,12 +490,15 @@
                 formFieldDynamicInputs.innerHTML += getCheckboxField('Password', 'admin_field_config[[password]')
                 formFieldDynamicInputs.innerHTML += getCheckboxField('Numeric', 'admin_field_config[numeric]')
 
+
             } else if (selectedType === 'select') {
                 formFieldDynamicInputs.innerHTML += getTextAreaField('Options', 'admin_field_config[options]',
                     'key1:value 1,key2:value 2',
                     true)
                 formFieldDynamicInputs.innerHTML += getCheckboxField('Searchable', 'admin_field_config[searchable]')
                 formFieldDynamicInputs.innerHTML += getCheckboxField('Multiple', 'admin_field_config[multiple]')
+                formFieldDynamicInputs.innerHTML += getCheckboxField('Required', 'admin_field_config[required]')
+
             } else if (selectedType === 'relationship_select') {
                 formFieldDynamicInputs.innerHTML += getSelectField('Related Model', 'admin_field_config[related_model]',
                     models.map(model => ({
@@ -486,6 +510,8 @@
 
                 formFieldDynamicInputs.innerHTML += getCheckboxField('Searchable', 'admin_field_config[searchable]')
                 formFieldDynamicInputs.innerHTML += getCheckboxField('Multiple', 'admin_field_config[multiple]')
+                formFieldDynamicInputs.innerHTML += getCheckboxField('Required', 'admin_field_config[required]')
+
             } else if (selectedType === 'radio') {
                 formFieldDynamicInputs.innerHTML += getTextAreaField('Options', 'admin_field_config[options]',
                     'key1:value 1,key2:value 2',
@@ -508,6 +534,8 @@
                 formFieldDynamicInputs.innerHTML += getCheckboxField('Avatar', 'admin_field_config[avatar]')
                 formFieldDynamicInputs.innerHTML += getCheckboxField('Image Editor', 'admin_field_config[image_editor]')
                 formFieldDynamicInputs.innerHTML += getCheckboxField('Openable', 'admin_field_config[openable]')
+                formFieldDynamicInputs.innerHTML += getCheckboxField('Required', 'admin_field_config[required]')
+
             }
         }
     </script>
