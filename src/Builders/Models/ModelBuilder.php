@@ -108,12 +108,14 @@ class ModelBuilder implements Builder
             $translatableFields = [];
             foreach ($this->model->fields as $field) {
                 if ($field->translatable) {
-                    $translatableFields[] = "'$field->name'";
+                    $translatableFields[] = "'$field->column_name'";
                 }
             }
 
             if (count($translatableFields) > 0) {
                 $code['properties'] = str_replace('@translatableFields', implode(', ', $translatableFields), $code['properties']);
+            } else {
+                $code['properties'] = str_replace('@translatableFields', '', $code['properties']);
             }
         }
 
@@ -141,8 +143,10 @@ class ModelBuilder implements Builder
                 if (isset($package['model'])) {
                     $this->imports = array_merge($this->imports, $package['model']['imports']);
                     $this->traits = array_merge($this->traits, $package['model']['traits']);
-                    $$this->extends =  $package['model']['extends'];
-                    $$this->implements = array_merge($$this->implements, $package['model']['implements']);
+                    if(sizeof($package['model']['extends']) > 0) {
+                        $this->extends =  $package['model']['extends'][0];
+                    }
+                    $this->implements = array_merge($this->implements, $package['model']['implements']);
                     $this->methods = array_merge($this->methods, $package['model']['methods']);
                     $this->properties = array_merge($this->properties, $package['model']['properties']);
                 }

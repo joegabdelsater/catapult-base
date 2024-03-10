@@ -9,6 +9,6 @@ return [
     'catapult_routes' => __DIR__ . '/../../../../../routes/catapult',
     'web_routes_file' => __DIR__ . '/../../../../../routes/web.php',
     'api_routes_file' => __DIR__ . '/../../../../../routes/api.php',
-    'filament_resources' => __DIR__ . '/../../../../../app/Filament/Resources',
+    'filament_resources' => __DIR__ . '/../../../../../app/Filament/Admin/Resources',
     'filament_service_provider_file' => __DIR__ . '/../../../../../app/Providers/Filament/AdminPanelProvider.php',
 ];

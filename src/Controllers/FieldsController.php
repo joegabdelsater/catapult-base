@@ -8,6 +8,7 @@ use Joeabdelsater\CatapultBase\Models\CatapultModel;
 use Joeabdelsater\CatapultBase\Models\CatapultField;
 use Joeabdelsater\CatapultBase\Builders\ClassGenerator;
 use Illuminate\Support\Facades\Artisan;
+use Illuminate\Support\Str;
 
 class FieldsController extends BaseController
 {
@@ -19,11 +20,66 @@ class FieldsController extends BaseController
         return view('catapult::fields.create', compact('model', 'models'));
     }
 
+    public function delete($fieldId)
+    {
+        CatapultField::find($fieldId)->delete();
+        return redirect()->back();
+    }
+
     public function store(Request $request, $modelId)
     {
-        $request->merge(['catapult_model_id' => $modelId]);
 
-        CatapultField::create($request->all());
+
+        $checkboxes = ['nullable', 'unique', 'translatable'];
+        $jsCheckboxes = ['required', 'disabled', 'readonly', 'numeric', 'password', 'searchable', 'multiple', 'image', 'avatar', 'image_editor', 'openable'];
+
+        $valid = $request->validate([
+            'column_name' => 'required',
+            'column_type' => 'required',
+            'nullable' => 'nullable',
+            'unique' => 'nullable',
+            'default' => 'string|nullable',
+            'validation' => 'string|nullable',
+            'admin_column_type' => 'string|nullable',
+            'admin_column_config' => 'array|nullable',
+            'admin_field_type' => 'string|nullable',
+            'admin_field_config' => 'array|nullable',
+            'translatable' => 'nullable',
+        ]);
+
+
+        foreach ($checkboxes as $checkbox) {
+            if (!$request->has($checkbox)) {
+                $valid[$checkbox] = 0;
+            } else {
+                $valid[$checkbox] = 1;
+            }
+        }
+
+        if (isset($valid['admin_column_config'])) {
+            foreach ($jsCheckboxes as $checkbox) {
+                if (!$request->has($checkbox)) {
+                    $valid['admin_column_config'][$checkbox] = 0;
+                } else {
+                    $valid['admin_column_config'][$checkbox] = 1;
+                }
+            }
+        }
+
+        if (isset($valid['admin_column_field'])) {
+            foreach ($jsCheckboxes as $checkbox) {
+                if (!$request->has($checkbox)) {
+                    $valid['admin_column_config'][$checkbox] = 0;
+                } else {
+                    $valid['admin_column_config'][$checkbox] = 1;
+                }
+            }
+        }
+
+
+        $valid['catapult_model_id'] = $modelId;
+
+        CatapultField::create($valid);
 
         return redirect()->route('catapult.fields.create', ['modelId' => $modelId]);
     }
@@ -36,7 +92,8 @@ class FieldsController extends BaseController
         $validationLines = [];
         $filamentColumnLines = [];
         $filamentFieldLines = [];
-        $imports = [];
+        $filamentImports = [];
+        $filamentTraits = [];
 
         foreach ($model->fields as $field) {
             $migrationLines[] = $this->getMigrationLine($field);
@@ -49,20 +106,23 @@ class FieldsController extends BaseController
                 $result = $this->getAdminColumnLine($field);
                 $filamentColumnLines[] = $result['line'];
 
-                $imports = array_merge($imports, $result['import']);
+                $filamentImports = array_merge($filamentImports, $result['import']);
             }
 
 
             if ($field->admin_field_type) {
                 $result = $this->getAdminFieldLine($field);
                 $filamentFieldLines[] = $result['line'];
-                $imports = array_merge($imports, $result['import']);
+                $filamentImports = array_merge($filamentImports, $result['import']);
             }
         }
 
-        $imports = array_unique($imports);
+        $filamentImports = array_unique($filamentImports);
 
-
+        if ($model->packages && in_array('filament_translatable', $model->packages)) {
+            $filamentImports[] = 'use Filament\Resources\Concerns\Translatable;';
+            $filamentTraits[] = 'use Translatable;';
+        }
 
         foreach ($_validationLines as $column => $validation) {
             $validationLines[] = "'" . $column . "' => '" . $validation . "'";
@@ -72,13 +132,16 @@ class FieldsController extends BaseController
         $filamentColumnCode =  "\t" . implode(",\n\t\t\t\t", $filamentColumnLines);
         $filamentFieldCode =  "\t" . implode(",\n\t\t\t\t", $filamentFieldLines);
         $migrationCode =   implode("\n\t\t\t\t", $migrationLines);
-        $importsCode = implode("\n", $imports);
+        $filamentImportsCode = implode("\n", $filamentImports);
+        $filamentTraitsCode = implode("\n", $filamentTraits);
 
 
 
         $this->generateMigration($model, $migrationCode);
         $this->generateValidation($model, $validationCode);
-        $this->generateFilament($model, $filamentColumnCode, $filamentFieldCode, $importsCode);
+        $this->generateFilament($model, $filamentColumnCode, $filamentFieldCode, $filamentImportsCode, $filamentTraitsCode);
+
+        return redirect()->route('catapult.models.create');
     }
 
     public function getAdminFieldLine($field)
@@ -130,6 +193,10 @@ class FieldsController extends BaseController
             case 'select':
                 $imports['import'] = ['use Filament\Forms\Components\Select;'];
                 $imports['line'] = 'Select::make(\'' . $field->column_name . '\')->options(' . $this->generateStaticOptions($field->admin_field_config['options']) . ')' . $this->generateSelectMethods($field->admin_field_config);
+
+                if ($field->admin_field_config && isset($field->admin_field_config['required'])) {
+                    $imports['line'] = $imports['line'] . '->required()';
+                }
                 break;
 
             case 'relationship_select':
@@ -139,17 +206,27 @@ class FieldsController extends BaseController
                 ];
 
                 $imports['line'] = 'Select::make(\'' . $field->column_name . '\')->options(' . $this->generateModelOptions($field->admin_field_config) . ')' . $this->generateSelectMethods($field->admin_field_config);
+
+                if ($field->admin_field_config && isset($field->admin_field_config['required'])) {
+                    $imports['line'] = $imports['line'] . '->required()';
+                }
                 break;
 
             case 'textarea':
                 $imports['import'] = ['use Filament\Forms\Components\Textarea;'];
                 $imports['line'] = 'Textarea::make(\'' . $field->column_name . '\')';
+                if ($field->admin_field_config && isset($field->admin_field_config['required'])) {
+                    $imports['line'] = $imports['line'] . '->required()';
+                }
                 break;
 
 
             case 'checkbox':
                 $imports['import'] = ['use Filament\Forms\Components\Checkbox;'];
                 $imports['line'] = 'Checkbox::make(\'' . $field->column_name . '\')';
+                if ($field->admin_field_config && isset($field->admin_field_config['required'])) {
+                    $imports['line'] = $imports['line'] . '->required()';
+                }
                 break;
 
             case 'toggle':
@@ -165,17 +242,30 @@ class FieldsController extends BaseController
             case 'rich_editor':
                 $imports['import'] = ['use Filament\Forms\Components\RichEditor;'];
                 $imports['line'] = 'RichEditor::make(\'' . $field->column_name . '\')';
+
+                if ($field->admin_field_config && isset($field->admin_field_config['required'])) {
+                    $imports['line'] = $imports['line'] . '->required()';
+                }
                 break;
 
 
             case 'markdown_editor':
                 $imports['import'] = ['use Filament\Forms\Components\MarkdownEditor;'];
+
                 $imports['line'] = 'MarkdownEditor::make(\'' . $field->column_name . '\')';
+
+                if ($field->admin_field_config && isset($field->admin_field_config['required'])) {
+                    $imports['line'] = $imports['line'] . '->required()';
+                }
                 break;
 
             case 'file_upload':
                 $imports['import'] = ['use Filament\Forms\Components\FileUpload;'];
                 $imports['line'] = 'FileUpload::make(\'' . $field->column_name . '\')';
+
+                if ($field->admin_field_config && isset($field->admin_field_config['required'])) {
+                    $imports['line'] = $imports['line'] . '->required()';
+                }
 
                 if ($field->admin_field_config && isset($field->admin_field_config['disk'])) {
                     $imports['line'] = $imports['line'] . '->disk(\'' . $field->admin_field_config['disk'] . '\')';
@@ -512,21 +602,36 @@ return new class extends Migration
         $validationGenerator->generate();
     }
 
-    public function generateFilament($model, $columnsCode, $fieldsCode, $importsCode)
-    {   
-
+    public function generateFilament($model, $columnsCode, $fieldsCode, $importsCode, $traitsCode)
+    {
         Artisan::call('make:filament-resource', [
             'name' => $model->name,
         ]);
 
+
+        $this->modifyResource($model, $importsCode, $fieldsCode, $columnsCode, $traitsCode);
+
+        /** Modify the resource pages if translation is required */
+        if ($model->packages && in_array('filament_translatable', $model->packages)) {
+            $this->modifyResourcePages($model);
+        }
+    }
+
+    public function modifyResource($model, $importsCode, $fieldsCode, $columnsCode, $traitsCode)
+    {
         $resourcePath = config('directories.filament_resources') . '/' . $model->name . 'Resource.php';
 
+
+        /** Modify the main resource file */
         $resource = file_get_contents($resourcePath);
 
         //handle the importsCode
         $pattern = '/(use [^;]+;)$/m';
         $replacement = "$1\n$importsCode";
         $modifiedContents = preg_replace($pattern, $replacement, $resource, 1);
+
+        $positionForUse = strpos($modifiedContents, "{") + 1; // Find the first occurrence of '{' and add 1 to move after it
+        $modifiedContents = substr_replace($modifiedContents, "\n    " . $traitsCode . "\n", $positionForUse, 0);
 
         //handle the fields
         $pattern = '/->schema\(\[\s*\/\/.*?\]\);/s';
@@ -542,5 +647,96 @@ return new class extends Migration
         ]);';
         $modifiedContents = preg_replace($pattern, $replacement, $modifiedContents);
         file_put_contents($resourcePath, $modifiedContents);
+    }
+
+    public function modifyResourcePages($model)
+    {
+        $resourcePagesPath = config('directories.filament_resources') . '/' . $model->name . 'Resource/Pages';
+
+        $this->modifyCreatePage($model, $resourcePagesPath);
+        $this->modifyEditPage($model, $resourcePagesPath);
+        $this->modifyListPage($model, $resourcePagesPath);
+    }
+
+    public function modifyCreatePage($model, $resourcePagesPath)
+    {
+        $createPagePath = $resourcePagesPath . '/Create' . $model->name . '.php';
+        $resourcePageContent = file_get_contents($createPagePath);
+
+        $useStatement = 'use CreateRecord\Concerns\Translatable;';
+        $getHeaderActionsMethod = <<<METHOD
+   
+       protected function getHeaderActions(): array
+       {
+           return [
+               Actions\LocaleSwitcher::make(),
+               // ...
+           ];
+       }
+   METHOD;
+
+        // Locate the position to insert the `use` statement (after the opening class line)
+        $positionForUse = strpos($resourcePageContent, "{") + 1; // Find the first occurrence of '{' and add 1 to move after it
+        $resourcePageContent = substr_replace($resourcePageContent, "\n    " . $useStatement . "\n", $positionForUse, 0);
+
+        // Assuming there's a closing brace for the class, add the new method before it
+        // This is a simplified approach; you might need a more reliable way to find the insertion point
+        $positionForMethod = strrpos($resourcePageContent, '}') - 1;
+        $resourcePageContent = substr_replace($resourcePageContent, $getHeaderActionsMethod, $positionForMethod, 0);
+
+        // Write the modified content back to the file
+        file_put_contents($createPagePath, $resourcePageContent);
+    }
+
+    public function modifyEditPage($model, $resourcePagesPath)
+    {
+        $editPagePath = $resourcePagesPath . '/Edit' . $model->name . '.php';
+        // Read the existing content of the file
+        $resourcePageContent = file_get_contents($editPagePath);
+
+        // Prepare the new lines to be added
+        $useStatement = 'use EditRecord\Concerns\Translatable;';
+
+        // Check if the use statement already exists to avoid duplication
+        if (!str_contains($resourcePageContent, $useStatement)) {
+            $positionForUse = strpos($resourcePageContent, "{") + 1;
+            $resourcePageContent = substr_replace($resourcePageContent, "\n    " . $useStatement . "\n", $positionForUse, 0);
+
+        }
+
+        // Locate the `getHeaderActions` method and insert the new action
+        $pattern = '/(getHeaderActions\(\): array\s*{\s*return \[)([^]]+)/';
+        $replacement = '$1$2    Actions\LocaleSwitcher::make(),';
+
+
+        $resourcePageContent = preg_replace($pattern, $replacement, $resourcePageContent);
+
+        file_put_contents($editPagePath, $resourcePageContent);
+    }
+
+    public function modifyListPage($model, $resourcePagesPath)
+    {
+        $listPagePath = $resourcePagesPath . '/List' . Str::plural($model->name) . '.php';
+
+        // Read the existing content of the file
+        $resourcePageContent = file_get_contents($listPagePath);
+
+        // Prepare the new lines to be added
+        $useStatement = 'use ListRecords\Concerns\Translatable;';
+
+        // Check if the use statement already exists to avoid duplication
+        if (!str_contains($resourcePageContent, $useStatement)) {
+            $positionForUse = strpos($resourcePageContent, "{") + 1;
+            $resourcePageContent = substr_replace($resourcePageContent, "\n    " . $useStatement . "\n", $positionForUse, 0);
+        }
+
+        // Locate the `getHeaderActions` method and insert the new action
+        $pattern = '/(getHeaderActions\(\): array\s*{\s*return \[)([^]]+)/';
+        $replacement = '$1$2    Actions\LocaleSwitcher::make(),';
+
+
+        $resourcePageContent = preg_replace($pattern, $replacement, $resourcePageContent);
+
+        file_put_contents($listPagePath, $resourcePageContent);
     }
 }

@@ -51,7 +51,7 @@ return [
         'package_name' => 'laravel-filament',
         'composer_require' => 'filament/filament',
         'version' => '^3.2',
-        'post_install' => ['@php artisan filament:install --panels', '@php artisan make:filament-user --name=Admin --password=password --email=admin@admin.com'],
+        'post_install' => [],
         'model' => [
             'model' => ['User'],
             'imports' => [
@@ -78,23 +78,15 @@ return [
         'package_name' => 'filament/spatie-laravel-translatable-plugin',
         'composer_require' => 'filament/spatie-laravel-translatable-plugin',
         'version' => '^3.2',
-        'post_install' => ['@php artisan catapult:translate-fialement-service-provider'],
+        'post_install' => [''],
         'model' => [
             'imports' => [
-                'use Spatie\Sluggable\HasSlug;',
-                'use Spatie\Sluggable\SlugOptions;'
             ],
             'traits' => [
-                'use HasSlug;',
             ],
             'extends' => [],
             'implements' => [],
-            'methods' => ["public function getSlugOptions() : SlugOptions
-            {
-                return SlugOptions::create()
-                    ->generateSlugsFrom('name')
-                    ->saveSlugsTo('slug');
-            }"],
+            'methods' => [],
             'properties' => [],
         ],
         'service_provider' => [
