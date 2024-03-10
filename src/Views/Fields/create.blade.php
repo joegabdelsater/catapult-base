@@ -535,6 +535,7 @@
                 formFieldDynamicInputs.innerHTML += getCheckboxField('Image Editor', 'admin_field_config[image_editor]')
                 formFieldDynamicInputs.innerHTML += getCheckboxField('Openable', 'admin_field_config[openable]')
                 formFieldDynamicInputs.innerHTML += getCheckboxField('Required', 'admin_field_config[required]')
+<<<<<<< HEAD
             } else if (selectedType === 'checkbox') {
                 formFieldDynamicInputs.innerHTML += getTextField('Label', 'admin_field_config[label]', 'Enter label')
                 formFieldDynamicInputs.innerHTML += getTextField('Value', 'admin_field_config[value]', 'Enter value')
@@ -560,6 +561,9 @@
                 formFieldDynamicInputs.innerHTML += getTextField('Max length', 'admin_field_config[max]',
                     'Enter max length')
                 formFieldDynamicInputs.innerHTML += getCheckboxField('Required', 'admin_field_config[required]')
+=======
+
+>>>>>>> origin/main
             }
         }
     </script>
