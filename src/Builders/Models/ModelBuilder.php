@@ -47,8 +47,11 @@ class ModelBuilder implements Builder
         $this->mergeWithModelClassDetails();
         $this->unify();
 
+        $this->properties[] = 'protected $table = \'' . $this->model->table_name . '\';';
+        
         $code = $this->generateDetailsCode();
 
+        
         $modelContent = <<<PHP
             <?php
             namespace App\Models;

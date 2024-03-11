@@ -50,7 +50,7 @@ class ModelsController extends BaseController
 
         $valid = $request->validate([
             'name' => 'required|unique:catapult_models',
-            'table_name' => 'nullable|unique:models,table_name',
+            'table_name' => 'nullable|unique:catapult_models,table_name',
             'only_guard_id' => 'nullable',
             'packages' => 'nullable|array',
             'packages.*' => 'string'

@@ -55,7 +55,7 @@
 
         <div class="relative">
 
-            <div class="fixed top-20">
+            <div class="top fixed">
                 <div class="mb-8">
                     <p class="text-2xl font-bold mb-1">You are in the</br>
                     <div class="bg-gray-700 px-2 py-1 text-center">
@@ -68,7 +68,7 @@
                 @if (count($models) === 0)
                     <div class="text-gray-700">Seems like you haven't created anything yet.</div>
                 @endif
-                <div class="">
+                <div class="overflow-y-scroll h-[600px] pb-12">
 
                     @foreach ($models as $model)
                         <div class="flex justify-between items-center p-3">
