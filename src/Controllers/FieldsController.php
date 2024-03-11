@@ -30,7 +30,7 @@ class FieldsController extends BaseController
     {
 
 
-        $checkboxes = ['nullable', 'unique', 'translatable'];
+        $checkboxes = ['nullable', 'unique', 'translatable', 'sluggable'];
         $jsCheckboxes = ['required', 'disabled', 'readonly', 'numeric', 'password', 'searchable', 'multiple', 'image', 'avatar', 'image_editor', 'openable'];
 
         $valid = $request->validate([

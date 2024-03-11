@@ -48,7 +48,7 @@ class ModelBuilder implements Builder
         $this->unify();
 
         $this->properties[] = 'protected $table = \'' . $this->model->table_name . '\';';
-        
+
         $code = $this->generateDetailsCode();
 
         
@@ -124,6 +124,13 @@ class ModelBuilder implements Builder
 
         if (count($this->methods) > 0) {
             $code['methods'] = implode("\n\t", $this->methods);
+            
+            foreach ($this->model->fields as $field) {
+                //** check for sluggable fields */
+                if($field->sluggable) {
+                    $code['methods'] = str_replace('@sluggableField', $field->column_name, $code['methods']);
+                }
+            }
         }   
 
 

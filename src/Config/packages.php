@@ -40,7 +40,7 @@ return [
             'methods' => ["public function getSlugOptions() : SlugOptions
             {
                 return SlugOptions::create()
-                    ->generateSlugsFrom('name')
+                    ->generateSlugsFrom('@sluggableField')
                     ->saveSlugsTo('slug');
             }"],
             'properties' => [],

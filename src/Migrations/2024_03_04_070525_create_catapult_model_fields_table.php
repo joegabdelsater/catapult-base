@@ -21,7 +21,7 @@ return new class extends Migration
             $table->string('default')->nullable();
             $table->boolean('nullable')->default(false)->nullable();
             $table->boolean('unique')->default(false)->nullable();
-
+            $table->boolean('sluggable')->default(false)->nullable();
             /** Validation */
             $table->string('validation')->nullable();
 
